@@ -4,6 +4,10 @@
 
 PetLives lets players give lives to their pets and revive them if they die. Lives work just like Totems for players.
 
+![Image](https://raw.githubusercontent.com/hyperdefined/PetLives/master/example.gif)
+![Image](https://raw.githubusercontent.com/hyperdefined/PetLives/master/example2.gif)
+![Image](https://raw.githubusercontent.com/hyperdefined/PetLives/master/example3.gif)
+
 ## Features
 * Highly customizable.
     * Set a life limit.
