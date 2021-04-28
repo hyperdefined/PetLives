@@ -46,6 +46,7 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(ChatColor.GOLD + "/petlives check <pet UUID> " + ChatColor.YELLOW + "- Check on a dead pet.");
                 sender.sendMessage(ChatColor.GOLD + "/petlives deadpets " + ChatColor.YELLOW + "- Shows a list of your dead pets.");
                 sender.sendMessage(ChatColor.GOLD + "/petlives revive <pet UUID> " + ChatColor.YELLOW + "- Respawn a pet.");
+                sender.sendMessage(ChatColor.GOLD + "/petlives uuid " + ChatColor.YELLOW + "- Check on a mob's UUID.");
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
             }
@@ -150,6 +151,6 @@ public class CommandPet implements TabExecutor {
         if (args[0].equalsIgnoreCase("revive")) {
             return petLives.petFileHandler.getDeadPetsList(Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }
-        return Arrays.asList("help", "check", "revive", "deadpets");
+        return Arrays.asList("help", "check", "revive", "deadpets, uuid");
     }
 }
