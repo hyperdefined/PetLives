@@ -32,11 +32,14 @@ public class PetReviver {
         AttributeInstance attributeMovementSpeed;
         AttributeInstance attributeMaxHealth;
 
+        long ageFromJSON = (long) deadPet.get("age");
+        int age = Math.toIntExact(ageFromJSON);
+
         switch(type) {
             case "HORSE":
                 Entity horse = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.HORSE);
                 Horse newHorse = (Horse) horse;
-                newHorse.setAge((Integer) deadPet.get("age"));
+                newHorse.setAge(age);
                 if (name != null) {
                     newHorse.setCustomName(name);
                 }
@@ -62,7 +65,7 @@ public class PetReviver {
             case "WOLF": {
                 Entity wolf = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
                 Wolf newWolf = (Wolf) wolf;
-                newWolf.setAge((Integer) deadPet.get("age"));
+                newWolf.setAge(age);
                 if (name != null) {
                     newWolf.setCustomName((String) deadPet.get("name"));
                 }
@@ -80,7 +83,7 @@ public class PetReviver {
             case "DONKEY": {
                 Entity donkey = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
                 Donkey newDonkey = (Donkey) donkey;
-                newDonkey.setAge((Integer) deadPet.get("age"));
+                newDonkey.setAge(age);
                 if (name != null) {
                     newDonkey.setCustomName(name);
                 }
@@ -104,7 +107,7 @@ public class PetReviver {
             case "MULE": {
                 Entity mule = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
                 Mule newMule = (Mule) mule;
-                newMule.setAge((Integer) deadPet.get("age"));
+                newMule.setAge(age);
                 if (name != null) {
                     newMule.setCustomName(name);
                 }
@@ -128,7 +131,7 @@ public class PetReviver {
             case "LLAMA": {
                 Entity llama = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
                 Llama newLlama = (Llama) llama;
-                newLlama.setAge((Integer) deadPet.get("age"));
+                newLlama.setAge(age);
                 if (name != null) {
                     newLlama.setCustomName(name);
                 }
@@ -154,7 +157,7 @@ public class PetReviver {
             case "PARROT": {
                 Entity parrot = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
                 Parrot newParrot = (Parrot) parrot;
-                newParrot.setAge((Integer) deadPet.get("age"));
+                newParrot.setAge(age);
                 if (name != null) {
                     newParrot.setCustomName(name);
                 }
@@ -177,7 +180,7 @@ public class PetReviver {
             case "CAT": {
                 Entity cat = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
                 Cat newCat = (Cat) cat;
-                newCat.setAge((Integer) deadPet.get("age"));
+                newCat.setAge(age);
                 if (name != null) {
                     newCat.setCustomName((String) deadPet.get("name"));
                 }
