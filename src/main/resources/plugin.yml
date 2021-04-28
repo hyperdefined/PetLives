@@ -1,0 +1,7 @@
+name: PetLives
+version: ${project.version}
+main: lol.hyper.petlives.PetLives
+api-version: 1.16
+commands:
+  petlives:
+    usage: /petlives

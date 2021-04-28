@@ -1,0 +1,13 @@
+# Set the limit of lives a pet can have. Set to -1 to disable a limit.
+max-pet-lives: 5
+
+# Do you want players to be able to revive their pets?
+allow-revives: true
+
+# Specify which items you want to use for each purpose.
+# See https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+items:
+  lives-item: GOLDEN_APPLE
+  revive-item: ENCHANTED_GOLDEN_APPLE
+
+config-version: 1
