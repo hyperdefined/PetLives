@@ -94,6 +94,8 @@ public class Events implements Listener {
                         petLives.petFileHandler.updatePetLives(player.getUniqueId(), entity.getUniqueId(), currentLives + 1);
                         player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " now has " + (currentLives + 1) + " lives!");
                         tameable.playEffect(EntityEffect.LOVE_HEARTS);
+                        int index = player.getInventory().getHeldItemSlot();
+                        player.getInventory().setItem(index, new ItemStack(Material.AIR));
                     }
                 }
             }
