@@ -107,6 +107,10 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "revive": {
+                if (!petLives.config.getBoolean("allow-revives")) {
+                    sender.sendMessage(ChatColor.RED + "You cannot revive pets.");
+                    return true;
+                }
                 if (args.length == 1) {
                     sender.sendMessage(ChatColor.RED + "You must say which pet you want to revive.");
                     return true;
