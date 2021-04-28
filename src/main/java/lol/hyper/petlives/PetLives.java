@@ -2,11 +2,11 @@ package lol.hyper.petlives;
 
 import lol.hyper.petlives.tools.PetFileHandler;
 import lol.hyper.petlives.tools.PetReviver;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -41,6 +41,8 @@ public final class PetLives extends JavaPlugin {
 
         this.getCommand("petlives").setExecutor(commandPet);
         Bukkit.getServer().getPluginManager().registerEvents(events, this);
+
+        Metrics metrics = new Metrics(this, 11182);
     }
 
     public void loadConfig() {
