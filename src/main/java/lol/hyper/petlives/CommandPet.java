@@ -28,7 +28,7 @@ public class CommandPet implements TabExecutor {
         this.petLives = petLives;
     }
 
-    public final ArrayList<Player> playerisCheckingMob = new ArrayList<>();
+    public final ArrayList < Player > playerisCheckingMob = new ArrayList < > ();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -39,7 +39,8 @@ public class CommandPet implements TabExecutor {
         }
         Player player = (Player) sender;
         switch (args[0]) {
-            case "help": {
+            case "help":
+            {
                 sender.sendMessage(ChatColor.GOLD + "-----------------PetLives-----------------");
                 sender.sendMessage(ChatColor.GOLD + "/petlives help " + ChatColor.YELLOW + "- Shows this menu.");
                 sender.sendMessage(ChatColor.GOLD + "/petlives check <pet UUID> " + ChatColor.YELLOW + "- Check on a dead pet.");
@@ -49,13 +50,14 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
             }
-            case "check": {
+            case "check":
+            {
                 if (args.length == 1) {
                     sender.sendMessage(ChatColor.RED + "You must say which pet you want to see. See /petlives deadpets for a list.");
                     return true;
                 }
                 UUID petUUID = UUID.fromString(args[1]);
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
+                List < String > pets = new ArrayList < String > (petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
                 if (!pets.contains(petUUID.toString())) {
                     sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
                     return true;
@@ -70,16 +72,17 @@ public class CommandPet implements TabExecutor {
                 Location deathLocation = petLives.petFileHandler.getDeathLocation(player.getUniqueId(), petUUID);
                 sender.sendMessage(ChatColor.GOLD + "-----------------" + name + "-----------------");
                 sender.sendMessage(ChatColor.GOLD + "Type: " + ChatColor.YELLOW + pet.get("type").toString());
-                sender.sendMessage(ChatColor.GOLD + "UUID: " + ChatColor.YELLOW +petUUID.toString());
+                sender.sendMessage(ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + petUUID.toString());
                 sender.sendMessage(ChatColor.GOLD + "X: " + ChatColor.YELLOW + (int) deathLocation.getX() + ChatColor.GOLD +
-                                " Y: " + ChatColor.YELLOW + (int) deathLocation.getY() + ChatColor.GOLD
-                                + " Z: " + ChatColor.YELLOW + (int) deathLocation.getZ() + ChatColor.GOLD
-                                + " (" + deathLocation.getWorld().getName() + ")");
+                        " Y: " + ChatColor.YELLOW + (int) deathLocation.getY() + ChatColor.GOLD +
+                        " Z: " + ChatColor.YELLOW + (int) deathLocation.getZ() + ChatColor.GOLD +
+                        " (" + deathLocation.getWorld().getName() + ")");
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
             }
-            case "deadpets": {
-                ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
+            case "deadpets":
+            {
+                ArrayList < String > deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
                 if (deadPets == null) {
                     sender.sendMessage(ChatColor.RED + "None of your pets have died.");
                     return true;
@@ -87,7 +90,7 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(ChatColor.GOLD + "-----------------Dead Pets-----------------");
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
                 sender.sendMessage(ChatColor.YELLOW + "Click on a pet to see its information.");
-                for (String x : deadPets) {
+                for (String x: deadPets) {
                     JSONObject pet = (JSONObject) jsonObject.get(x);
                     String name = (String) pet.get("name");
                     if (name == null) {
@@ -98,15 +101,16 @@ public class CommandPet implements TabExecutor {
                     textComponent.setColor(ChatColor.YELLOW);
                     textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(
                             ChatColor.GOLD + "Name: " + ChatColor.YELLOW + name + "\n" +
-                            ChatColor.GOLD + "Type: " + ChatColor.YELLOW + pet.get("type") + "\n" +
-                            ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + x)));
+                                    ChatColor.GOLD + "Type: " + ChatColor.YELLOW + pet.get("type") + "\n" +
+                                    ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + x)));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x));
                     sender.spigot().sendMessage(textComponent);
                 }
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
             }
-            case "revive": {
+            case "revive":
+            {
                 if (!petLives.config.getBoolean("allow-revives")) {
                     sender.sendMessage(ChatColor.RED + "You cannot revive pets.");
                     return true;
@@ -120,7 +124,7 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 UUID petUUID = UUID.fromString(args[1]);
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
+                List < String > pets = new ArrayList < String > (petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
                 if (!pets.contains(petUUID.toString())) {
                     sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
                     return true;
@@ -133,7 +137,8 @@ public class CommandPet implements TabExecutor {
                 player.getInventory().setItem(index, new ItemStack(Material.AIR));
                 break;
             }
-            case "uuid": {
+            case "uuid":
+            {
                 sender.sendMessage(ChatColor.GREEN + "Right click on the mob to see its UUID.");
                 playerisCheckingMob.add(player);
                 break;
@@ -143,7 +148,7 @@ public class CommandPet implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List < String > onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args[0].equalsIgnoreCase("check")) {
             return petLives.petFileHandler.getDeadPetsList(Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }

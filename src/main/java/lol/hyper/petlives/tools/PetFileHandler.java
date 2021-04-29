@@ -107,13 +107,13 @@ public class PetFileHandler {
      * @param player Player to get dead pets for.
      * @return The list of pets.
      */
-    public ArrayList<String> getDeadPetsList(UUID player) {
+    public ArrayList < String > getDeadPetsList(UUID player) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
-        ArrayList<String> deadPets = new ArrayList<>();
+        ArrayList < String > deadPets = new ArrayList < > ();
         if (jsonObject == null) {
             return null;
         }
-        for (Object o : jsonObject.keySet()) {
+        for (Object o: jsonObject.keySet()) {
             String key = (String) o;
             deadPets.add(key);
         }
@@ -128,9 +128,9 @@ public class PetFileHandler {
     public boolean isPetInStorage(UUID pet) {
         File[] petFiles = petLives.alivePetsFolder.listFiles();
         if (petFiles != null) {
-            for (File currentFile : petFiles) {
+            for (File currentFile: petFiles) {
                 JSONObject currentJSON = readFile(currentFile);
-                List<String> pets = new ArrayList<String>(currentJSON.keySet());
+                List < String > pets = new ArrayList < String > (currentJSON.keySet());
                 if (pets.contains(pet.toString())) {
                     return true;
                 }

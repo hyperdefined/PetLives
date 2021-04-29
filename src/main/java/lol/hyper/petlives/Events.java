@@ -109,7 +109,7 @@ public class Events implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
-        for (Entity e : chunk.getEntities()) {
+        for (Entity e: chunk.getEntities()) {
             // only check tameable mobs
             if (e instanceof Tameable) {
                 // see if the mob is owned by a player

@@ -33,7 +33,7 @@ public class PetReviver {
         long ageFromJSON = (long) deadPet.get("age");
         int age = Math.toIntExact(ageFromJSON);
 
-        switch(type) {
+        switch (type) {
             case "HORSE":
                 Entity horse = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.HORSE);
                 Horse newHorse = (Horse) horse;
@@ -60,7 +60,8 @@ public class PetReviver {
                 newHorse.setOwner(player);
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), horse.getUniqueId());
                 break;
-            case "WOLF": {
+            case "WOLF":
+            {
                 Entity wolf = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
                 Wolf newWolf = (Wolf) wolf;
                 newWolf.setAge(age);
@@ -78,7 +79,8 @@ public class PetReviver {
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), wolf.getUniqueId());
                 break;
             }
-            case "DONKEY": {
+            case "DONKEY":
+            {
                 Entity donkey = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
                 Donkey newDonkey = (Donkey) donkey;
                 newDonkey.setAge(age);
@@ -102,7 +104,8 @@ public class PetReviver {
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), donkey.getUniqueId());
                 break;
             }
-            case "MULE": {
+            case "MULE":
+            {
                 Entity mule = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
                 Mule newMule = (Mule) mule;
                 newMule.setAge(age);
@@ -126,7 +129,8 @@ public class PetReviver {
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), mule.getUniqueId());
                 break;
             }
-            case "LLAMA": {
+            case "LLAMA":
+            {
                 Entity llama = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
                 Llama newLlama = (Llama) llama;
                 newLlama.setAge(age);
@@ -152,7 +156,8 @@ public class PetReviver {
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), llama.getUniqueId());
                 break;
             }
-            case "PARROT": {
+            case "PARROT":
+            {
                 Entity parrot = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
                 Parrot newParrot = (Parrot) parrot;
                 newParrot.setAge(age);
@@ -175,7 +180,8 @@ public class PetReviver {
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), parrot.getUniqueId());
                 break;
             }
-            case "CAT": {
+            case "CAT":
+            {
                 Entity cat = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
                 Cat newCat = (Cat) cat;
                 newCat.setAge(age);
