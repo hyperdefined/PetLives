@@ -16,9 +16,7 @@ public class PetNameHandler {
             name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         } else {
             name = tameable.getCustomName();
-            System.out.println(tameable.getCustomName());
         }
-        System.out.println(name);
         return name;
     }
 
