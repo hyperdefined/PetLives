@@ -135,6 +135,8 @@ public class CommandPet implements TabExecutor {
                 petLives.petFileHandler.removeDeadPet(player.getUniqueId(), petUUID);
                 int index = player.getInventory().getHeldItemSlot();
                 player.getInventory().setItem(index, new ItemStack(Material.AIR));
+
+                player.sendMessage(ChatColor.GREEN + "Your pet is alive once again!");
                 break;
             }
             case "uuid":
