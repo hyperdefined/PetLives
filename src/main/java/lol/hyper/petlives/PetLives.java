@@ -2,6 +2,7 @@ package lol.hyper.petlives;
 
 import lol.hyper.petlives.tools.PetFileHandler;
 import lol.hyper.petlives.tools.PetReviver;
+import lol.hyper.petlives.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -43,6 +44,14 @@ public final class PetLives extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(events, this);
 
         Metrics metrics = new Metrics(this, 11182);
+
+        new UpdateChecker(this, 91822).getVersion(version -> {
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                logger.info("You are running the latest version.");
+            } else {
+                logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/petlives.91822/");
+            }
+        });
     }
 
     public void loadConfig() {
