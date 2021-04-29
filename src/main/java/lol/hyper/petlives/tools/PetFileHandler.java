@@ -3,11 +3,9 @@ package lol.hyper.petlives.tools;
 import lol.hyper.petlives.PetLives;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class PetFileHandler {
@@ -239,12 +236,10 @@ public class PetFileHandler {
         float yaw = Float.parseFloat(locationJSON.get("yaw").toString());
         float pitch = Float.parseFloat(locationJSON.get("pitch").toString());
         World world = Bukkit.getWorld((String) locationJSON.get("world"));
-        Location location = new Location(world, x, y, z, yaw, pitch);
-        return location;
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     public JSONObject getDeadPets(UUID player) {
-        JSONObject jsonObject = readFile(getDeadPetsFile(player));
-        return jsonObject;
+        return readFile(getDeadPetsFile(player));
     }
 }

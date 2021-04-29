@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
@@ -29,7 +28,7 @@ public class CommandPet implements TabExecutor {
         this.petLives = petLives;
     }
 
-    public ArrayList<Player> playerisCheckingMob = new ArrayList<>();
+    public final ArrayList<Player> playerisCheckingMob = new ArrayList<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

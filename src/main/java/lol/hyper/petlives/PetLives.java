@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 
 public final class PetLives extends JavaPlugin {
 
-    public Logger logger = this.getLogger();
-    public File alivePetsFolder = Paths.get(this.getDataFolder() + File.separator + "alivepets").toFile();
-    public File deadPetsFolder = Paths.get(this.getDataFolder() + File.separator + "deadpets").toFile();
+    public final Logger logger = this.getLogger();
+    public final File alivePetsFolder = Paths.get(this.getDataFolder() + File.separator + "alivepets").toFile();
+    public final File deadPetsFolder = Paths.get(this.getDataFolder() + File.separator + "deadpets").toFile();
     private final File configFile = new File(this.getDataFolder(), "config.yml");
     public Material livesItem;
     public Material reviveItem;

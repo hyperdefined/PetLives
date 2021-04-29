@@ -3,11 +3,9 @@ package lol.hyper.petlives.tools;
 import lol.hyper.petlives.PetLives;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
 import java.util.UUID;
