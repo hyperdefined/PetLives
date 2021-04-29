@@ -143,6 +143,9 @@ public class CommandPet implements TabExecutor {
                 playerisCheckingMob.add(player);
                 break;
             }
+            default: {
+                sender.sendMessage(ChatColor.RED + "Unknown option. Please see /petlives help for all valid options.");
+            }
         }
         return true;
     }
