@@ -19,7 +19,7 @@ public class PetReviver {
     }
 
     public void respawnPet(Player player, UUID pet, Location locationToSpawn) {
-        JSONObject jsonObject = petLives.petFileHandler.getDeadPets(player.getUniqueId());
+        JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
         if (jsonObject == null) {
             return;
         }

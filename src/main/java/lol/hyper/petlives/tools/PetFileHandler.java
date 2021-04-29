@@ -102,6 +102,11 @@ public class PetFileHandler {
         return (long) jsonObject.get(pet.toString());
     }
 
+    /**
+     * Get a string list of dead pets' UUID.
+     * @param player Player to get dead pets for.
+     * @return The list of pets.
+     */
     public ArrayList<String> getDeadPetsList(UUID player) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         ArrayList<String> deadPets = new ArrayList<>();
@@ -115,6 +120,11 @@ public class PetFileHandler {
         return deadPets;
     }
 
+    /**
+     * Check if the pet is in our storage. This goes through all alive pets files.
+     * @param pet Pet to check if it's saved.
+     * @return True if it's saved, false if not.
+     */
     public boolean isPetInStorage(UUID pet) {
         File[] petFiles = petLives.alivePetsFolder.listFiles();
         if (petFiles != null) {
@@ -129,6 +139,12 @@ public class PetFileHandler {
         return false;
     }
 
+    /**
+     * Update a pet's lives with a new number.
+     * @param player Owner of the pet.
+     * @param pet Pet to edit lives for.
+     * @param newLives The new total of lives to set.
+     */
     public void updatePetLives(UUID player, UUID pet, long newLives) {
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
@@ -139,6 +155,11 @@ public class PetFileHandler {
         writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
     }
 
+    /**
+     * Remove a pet from the alive file.
+     * @param player Pet owner.
+     * @param pet The pet to remove.
+     */
     public void removePet(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
@@ -148,6 +169,11 @@ public class PetFileHandler {
         writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
     }
 
+    /**
+     * Add a new pet to the player's file.
+     * @param player Pet owner.
+     * @param pet The pet to add.
+     */
     public void addNewPet(UUID player, UUID pet) {
         petLives.logger.info("Adding " + pet + " for owner " + Bukkit.getOfflinePlayer(player).getName() + ".");
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
@@ -158,6 +184,12 @@ public class PetFileHandler {
         writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
     }
 
+    /**
+     * See if a mob is owned by a player.
+     * @param player Owner to check.
+     * @param pet Mob to check.
+     * @return True if player owns it, false if not.
+     */
     public boolean checkIfPlayerOwnsPet(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
@@ -166,12 +198,22 @@ public class PetFileHandler {
         return jsonObject.containsKey(pet.toString());
     }
 
+    /**
+     * Remove a pet that has died from the dead pet files.
+     * @param player Pet owner.
+     * @param pet Pet to remove.
+     */
     public void removeDeadPet(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         jsonObject.remove(pet.toString());
         writeFile(getDeadPetsFile(player), jsonObject.toJSONString());
     }
 
+    /**
+     * Export a pet into the dead pets file.
+     * @param player Pet owner.
+     * @param tameable Pet to export.
+     */
     public void exportPet(UUID player, Tameable tameable) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         if (jsonObject == null) {
@@ -223,6 +265,12 @@ public class PetFileHandler {
         writeFile(getDeadPetsFile(player), jsonObject.toJSONString());
     }
 
+    /**
+     * Get a pet's death location from file.
+     * @param player Pet owner.
+     * @param pet Pet to get location.
+     * @return Location of death.
+     */
     public Location getDeathLocation(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         if (jsonObject == null) {
@@ -239,7 +287,7 @@ public class PetFileHandler {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
-    public JSONObject getDeadPets(UUID player) {
+    public JSONObject getDeadPetsJSON(UUID player) {
         return readFile(getDeadPetsFile(player));
     }
 }

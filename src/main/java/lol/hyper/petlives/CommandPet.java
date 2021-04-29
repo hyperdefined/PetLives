@@ -55,12 +55,12 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 UUID petUUID = UUID.fromString(args[1]);
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPets(player.getUniqueId()).keySet());
+                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
                 if (!pets.contains(petUUID.toString())) {
                     sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
                     return true;
                 }
-                JSONObject jsonObject = petLives.petFileHandler.getDeadPets(player.getUniqueId());
+                JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
                 JSONObject pet = (JSONObject) jsonObject.get(petUUID.toString());
                 String name = (String) pet.get("name");
                 if (name == null) {
@@ -85,7 +85,7 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 sender.sendMessage(ChatColor.GOLD + "-----------------Dead Pets-----------------");
-                JSONObject jsonObject = petLives.petFileHandler.getDeadPets(player.getUniqueId());
+                JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
                 sender.sendMessage(ChatColor.YELLOW + "Click on a pet to see its information.");
                 for (String x : deadPets) {
                     JSONObject pet = (JSONObject) jsonObject.get(x);
@@ -120,7 +120,7 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 UUID petUUID = UUID.fromString(args[1]);
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPets(player.getUniqueId()).keySet());
+                List<String> pets = new ArrayList<String>(petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId()).keySet());
                 if (!pets.contains(petUUID.toString())) {
                     sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
                     return true;

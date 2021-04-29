@@ -53,7 +53,7 @@ public class Events implements Listener {
                     }
                 } else {
                     // pet is going to die :(
-                    // remove it from the player file
+                    // remove it from the player file and export it
                     petLives.petFileHandler.removePet(owner, petUUID);
                     petLives.petFileHandler.exportPet(owner, tameable);
                 }
@@ -63,6 +63,7 @@ public class Events implements Listener {
 
     @EventHandler
     public void onPetTame(EntityTameEvent event) {
+        // add new pet to player's file when they tame it
         UUID owner = event.getOwner().getUniqueId();
         UUID petUUID = event.getEntity().getUniqueId();
         petLives.petFileHandler.addNewPet(owner, petUUID);
@@ -72,21 +73,24 @@ public class Events implements Listener {
     public void onRightClickEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
+        // check if player is checking the uuid from command
         if (petLives.commandPet.playerisCheckingMob.contains(player)) {
             petLives.commandPet.playerisCheckingMob.remove(player);
             player.sendMessage(ChatColor.GREEN + "UUID of this mob is: " + entity.getUniqueId() + ".");
             event.setCancelled(true);
         }
+        // check if the mob is owned by player
         if (petLives.petFileHandler.checkIfPlayerOwnsPet(player.getUniqueId(), entity.getUniqueId())) {
             long currentLives = petLives.petFileHandler.getPetLives(player.getUniqueId(), entity.getUniqueId());
             Tameable tameable = (Tameable) entity;
-            if (player.isSneaking() && player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+            ItemStack itemHeld = player.getInventory().getItemInMainHand();
+            // see if they are checking how many lives pet has left
+            if (player.isSneaking() && itemHeld.getType() == Material.AIR) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " has " + currentLives + " lives!");
             }
-            if (player.getInventory().getItemInMainHand().getType() != Material.AIR) {
-                ItemStack itemStack = player.getInventory().getItemInMainHand();
-                if (itemStack.getType() == petLives.livesItem) {
+            if (itemHeld.getType() != Material.AIR) {
+                if (itemHeld.getType() == petLives.livesItem) {
                     event.setCancelled(true);
                     if (currentLives + 1 > petLives.config.getInt("max-pet-lives")) {
                         player.sendMessage(ChatColor.RED + "The maximum amount of lives is " + petLives.config.getInt("max-pet-lives") + ".");
@@ -106,9 +110,12 @@ public class Events implements Listener {
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
         for (Entity e : chunk.getEntities()) {
+            // only check tameable mobs
             if (e instanceof Tameable) {
+                // see if the mob is owned by a player
                 boolean isPetAlreadySaved = petLives.petFileHandler.isPetInStorage(e.getUniqueId());
                 if (!isPetAlreadySaved) {
+                    // if the mob is not owned, add it to our database
                     Tameable tameable = (Tameable) e;
                     if (tameable.getOwner() != null) {
                         petLives.petFileHandler.addNewPet(tameable.getOwner().getUniqueId(), e.getUniqueId());
