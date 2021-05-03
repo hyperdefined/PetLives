@@ -18,6 +18,7 @@
 package lol.hyper.petlives.tools;
 
 import lol.hyper.petlives.PetLives;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -216,6 +217,10 @@ public class PetReviver {
                 newCat.setOwner(player);
                 petLives.petFileHandler.addNewPet(player.getUniqueId(), newCat.getUniqueId());
                 break;
+            }
+            default: {
+                player.sendMessage(ChatColor.RED + "Invalid pet type was saved. This is very bad. Plugin data was modified manually. Please check your console and report this issue on GitHub.");
+                petLives.logger.severe("Unable to respawn pet because the type is invalid. Please report this issue on GitHub. Raw data from file: " + deadPet.toJSONString());
             }
         }
     }
