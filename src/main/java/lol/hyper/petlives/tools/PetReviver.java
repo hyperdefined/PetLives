@@ -39,22 +39,26 @@ public class PetReviver {
     public void respawnPet(Player player, UUID pet, Location locationToSpawn) {
         JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
         if (jsonObject == null) {
+            player.sendMessage(ChatColor.RED + "You don't have any dead pets. This is not supposed to happen.");
             return;
         }
+        // get some basic info for the pet
         JSONObject deadPet = (JSONObject) jsonObject.get(pet.toString());
         String type = (String) deadPet.get("type");
         String name = (String) deadPet.get("name");
         boolean isAdult = (boolean) deadPet.get("isAdult");
         AttributeInstance attributeMovementSpeed;
         AttributeInstance attributeMaxHealth;
-
         long ageFromJSON = (long) deadPet.get("age");
         int age = Math.toIntExact(ageFromJSON);
 
+        // we spawn the pet differently based on the type
+        // each mob has it's own custom thing we need to save
+        Entity entity = null;
         switch (type) {
             case "HORSE":
-                Entity horse = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.HORSE);
-                Horse newHorse = (Horse) horse;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.HORSE);
+                Horse newHorse = (Horse) entity;
                 newHorse.setAge(age);
                 if (name != null) {
                     newHorse.setCustomName(name);
@@ -76,12 +80,11 @@ public class PetReviver {
                 }
 
                 newHorse.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), horse.getUniqueId());
                 break;
             case "WOLF":
             {
-                Entity wolf = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
-                Wolf newWolf = (Wolf) wolf;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
+                Wolf newWolf = (Wolf) entity;
                 newWolf.setAge(age);
                 if (name != null) {
                     newWolf.setCustomName((String) deadPet.get("name"));
@@ -94,13 +97,12 @@ public class PetReviver {
                 }
 
                 newWolf.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), wolf.getUniqueId());
                 break;
             }
             case "DONKEY":
             {
-                Entity donkey = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
-                Donkey newDonkey = (Donkey) donkey;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
+                Donkey newDonkey = (Donkey) entity;
                 newDonkey.setAge(age);
                 if (name != null) {
                     newDonkey.setCustomName(name);
@@ -119,13 +121,12 @@ public class PetReviver {
                 }
 
                 newDonkey.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), donkey.getUniqueId());
                 break;
             }
             case "MULE":
             {
-                Entity mule = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
-                Mule newMule = (Mule) mule;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
+                Mule newMule = (Mule) entity;
                 newMule.setAge(age);
                 if (name != null) {
                     newMule.setCustomName(name);
@@ -144,13 +145,12 @@ public class PetReviver {
                 }
 
                 newMule.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), mule.getUniqueId());
                 break;
             }
             case "LLAMA":
             {
-                Entity llama = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
-                Llama newLlama = (Llama) llama;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
+                Llama newLlama = (Llama) entity;
                 newLlama.setAge(age);
                 if (name != null) {
                     newLlama.setCustomName(name);
@@ -171,13 +171,12 @@ public class PetReviver {
                 }
 
                 newLlama.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), llama.getUniqueId());
                 break;
             }
             case "PARROT":
             {
-                Entity parrot = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
-                Parrot newParrot = (Parrot) parrot;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
+                Parrot newParrot = (Parrot) entity;
                 newParrot.setAge(age);
                 if (name != null) {
                     newParrot.setCustomName(name);
@@ -195,13 +194,12 @@ public class PetReviver {
                 }
 
                 newParrot.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), parrot.getUniqueId());
                 break;
             }
             case "CAT":
             {
-                Entity cat = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
-                Cat newCat = (Cat) cat;
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
+                Cat newCat = (Cat) entity;
                 newCat.setAge(age);
                 if (name != null) {
                     newCat.setCustomName((String) deadPet.get("name"));
@@ -215,13 +213,16 @@ public class PetReviver {
                 }
 
                 newCat.setOwner(player);
-                petLives.petFileHandler.addNewPet(player.getUniqueId(), newCat.getUniqueId());
+
                 break;
             }
             default: {
                 player.sendMessage(ChatColor.RED + "Invalid pet type was saved. This is very bad. Plugin data was modified manually. Please check your console and report this issue on GitHub.");
                 petLives.logger.severe("Unable to respawn pet because the type is invalid. Please report this issue on GitHub. Raw data from file: " + deadPet.toJSONString());
             }
+        }
+        if (entity != null) {
+            petLives.petFileHandler.addNewPet(player.getUniqueId(), entity.getUniqueId());
         }
     }
 }
