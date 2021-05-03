@@ -60,7 +60,7 @@ public final class PetLives extends JavaPlugin {
         this.getCommand("petlives").setExecutor(commandPet);
         Bukkit.getServer().getPluginManager().registerEvents(events, this);
 
-        Metrics metrics = new Metrics(this, 11182);
+        Metrics metrics = new Metrics(this, 11226);
 
         new UpdateChecker(this, 91822).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
