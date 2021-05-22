@@ -44,9 +44,6 @@ public class PetFileHandler {
         this.petLives = petLives;
     }
 
-    private static FileWriter writer;
-    private static FileReader reader;
-
     /**
      * Get the player's alive pets file.
      * @param player Player to get file for.
@@ -77,7 +74,7 @@ public class PetFileHandler {
         JSONParser parser = new JSONParser();
         Object obj = null;
         try {
-            reader = new FileReader(file);
+            FileReader reader = new FileReader(file);
             obj = parser.parse(reader);
             reader.close();
         } catch (IOException | ParseException e) {
@@ -95,7 +92,7 @@ public class PetFileHandler {
      */
     private void writeFile(File file, String jsonToWrite) {
         try {
-            writer = new FileWriter(file);
+            FileWriter writer = new FileWriter(file);
             writer.write(jsonToWrite);
             writer.close();
         } catch (IOException e) {
