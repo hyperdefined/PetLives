@@ -21,3 +21,7 @@ Visit the [wiki](https://github.com/hyperdefined/PetLives/wiki) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/PetLives/blob/master/LICENSE).
+
+| Licenses |
+| ----------- |
+| [json-simple](https://www.apache.org/licenses/LICENSE-2.0.html) |
