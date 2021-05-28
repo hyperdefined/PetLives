@@ -36,14 +36,15 @@ import java.util.logging.Logger;
 public final class PetLives extends JavaPlugin {
 
     public final Logger logger = this.getLogger();
-    public final File alivePetsFolder = Paths.get(this.getDataFolder() + File.separator + "alivepets").toFile();
-    public final File deadPetsFolder = Paths.get(this.getDataFolder() + File.separator + "deadpets").toFile();
+    public final File alivePetsFolder =
+            Paths.get(this.getDataFolder() + File.separator + "alivepets").toFile();
+    public final File deadPetsFolder =
+            Paths.get(this.getDataFolder() + File.separator + "deadpets").toFile();
+    final int CONFIG_VERSION = 1;
     private final File configFile = new File(this.getDataFolder(), "config.yml");
     public Material livesItem;
     public Material reviveItem;
     public FileConfiguration config;
-    final int CONFIG_VERSION = 1;
-
     public PetFileHandler petFileHandler;
     public Events events;
     public CommandPet commandPet;
@@ -66,7 +67,8 @@ public final class PetLives extends JavaPlugin {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                 logger.info("You are running the latest version.");
             } else {
-                logger.info("There is a new version available! Please download at https://www.spigotmc.org/resources/petlives.91822/");
+                logger.info(
+                        "There is a new version available! Please download at https://www.spigotmc.org/resources/petlives.91822/");
             }
         });
     }

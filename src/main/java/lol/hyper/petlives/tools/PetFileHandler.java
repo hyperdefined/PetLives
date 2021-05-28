@@ -50,7 +50,8 @@ public class PetFileHandler {
      * @return The player's alive pet file.
      */
     private File getAlivePetsFile(UUID player) {
-        return Paths.get(petLives.alivePetsFolder + File.separator + player.toString() + ".json").toFile();
+        return Paths.get(petLives.alivePetsFolder + File.separator + player.toString() + ".json")
+                .toFile();
     }
 
     /**
@@ -59,7 +60,8 @@ public class PetFileHandler {
      * @return The player's dead pet file.
      */
     private File getDeadPetsFile(UUID player) {
-        return Paths.get(petLives.deadPetsFolder + File.separator + player.toString() + ".json").toFile();
+        return Paths.get(petLives.deadPetsFolder + File.separator + player.toString() + ".json")
+                .toFile();
     }
 
     /**
@@ -121,13 +123,13 @@ public class PetFileHandler {
      * @param player Player to get dead pets for.
      * @return The list of pets.
      */
-    public ArrayList < String > getDeadPetsList(UUID player) {
+    public ArrayList<String> getDeadPetsList(UUID player) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
-        ArrayList < String > deadPets = new ArrayList < > ();
+        ArrayList<String> deadPets = new ArrayList<>();
         if (jsonObject == null) {
             return null;
         }
-        for (Object o: jsonObject.keySet()) {
+        for (Object o : jsonObject.keySet()) {
             String key = (String) o;
             deadPets.add(key);
         }
@@ -142,9 +144,9 @@ public class PetFileHandler {
     public boolean isPetInStorage(UUID pet) {
         File[] petFiles = petLives.alivePetsFolder.listFiles();
         if (petFiles != null) {
-            for (File currentFile: petFiles) {
+            for (File currentFile : petFiles) {
                 JSONObject currentJSON = readFile(currentFile);
-                List < String > pets = new ArrayList < String > (currentJSON.keySet());
+                List<String> pets = new ArrayList<String>(currentJSON.keySet());
                 if (pets.contains(pet.toString())) {
                     return true;
                 }
@@ -189,7 +191,8 @@ public class PetFileHandler {
      * @param pet The pet to add.
      */
     public void addNewPet(UUID player, UUID pet) {
-        petLives.logger.info("Adding " + pet + " for owner " + Bukkit.getOfflinePlayer(player).getName() + ".");
+        petLives.logger.info("Adding " + pet + " for owner "
+                + Bukkit.getOfflinePlayer(player).getName() + ".");
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
             jsonObject = new JSONObject();
@@ -242,13 +245,16 @@ public class PetFileHandler {
         petDetails.put("age", tameable.getAge());
         petDetails.put("type", tameable.getType().toString());
         petDetails.put("isAdult", tameable.isAdult());
-        petDetails.put("maxHealth", tameable.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        petDetails.put(
+                "maxHealth", tameable.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         if (tameable instanceof Wolf) {
             petDetails.put("collar", ((Wolf) tameable).getCollarColor().toString());
         }
         if (tameable instanceof AbstractHorse) {
             petDetails.put("jumpStrength", ((AbstractHorse) tameable).getJumpStrength());
-            petDetails.put("speed", tameable.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
+            petDetails.put(
+                    "speed",
+                    tameable.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getValue());
             if (tameable instanceof Horse) {
                 petDetails.put("color", ((Horse) tameable).getColor().toString());
                 petDetails.put("style", ((Horse) tameable).getStyle().toString());

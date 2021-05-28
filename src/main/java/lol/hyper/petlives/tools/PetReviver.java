@@ -81,8 +81,7 @@ public class PetReviver {
 
                 newHorse.setOwner(player);
                 break;
-            case "WOLF":
-            {
+            case "WOLF": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
                 Wolf newWolf = (Wolf) entity;
                 newWolf.setAge(age);
@@ -99,8 +98,7 @@ public class PetReviver {
                 newWolf.setOwner(player);
                 break;
             }
-            case "DONKEY":
-            {
+            case "DONKEY": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
                 Donkey newDonkey = (Donkey) entity;
                 newDonkey.setAge(age);
@@ -123,8 +121,7 @@ public class PetReviver {
                 newDonkey.setOwner(player);
                 break;
             }
-            case "MULE":
-            {
+            case "MULE": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
                 Mule newMule = (Mule) entity;
                 newMule.setAge(age);
@@ -147,8 +144,7 @@ public class PetReviver {
                 newMule.setOwner(player);
                 break;
             }
-            case "LLAMA":
-            {
+            case "LLAMA": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
                 Llama newLlama = (Llama) entity;
                 newLlama.setAge(age);
@@ -173,8 +169,7 @@ public class PetReviver {
                 newLlama.setOwner(player);
                 break;
             }
-            case "PARROT":
-            {
+            case "PARROT": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
                 Parrot newParrot = (Parrot) entity;
                 newParrot.setAge(age);
@@ -196,8 +191,7 @@ public class PetReviver {
                 newParrot.setOwner(player);
                 break;
             }
-            case "CAT":
-            {
+            case "CAT": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
                 Cat newCat = (Cat) entity;
                 newCat.setAge(age);
@@ -217,8 +211,12 @@ public class PetReviver {
                 break;
             }
             default: {
-                player.sendMessage(ChatColor.RED + "Invalid pet type was saved. This is very bad. Plugin data was modified manually. Please check your console and report this issue on GitHub.");
-                petLives.logger.severe("Unable to respawn pet because the type is invalid. Please report this issue on GitHub. Raw data from file: " + deadPet.toJSONString());
+                player.sendMessage(
+                        ChatColor.RED
+                                + "Invalid pet type was saved. This is very bad. Plugin data was modified manually. Please check your console and report this issue on GitHub.");
+                petLives.logger.severe(
+                        "Unable to respawn pet because the type is invalid. Please report this issue on GitHub. Raw data from file: "
+                                + deadPet.toJSONString());
             }
         }
         if (entity != null) {
