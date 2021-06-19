@@ -17,6 +17,7 @@
 
 package lol.hyper.petlives;
 
+import lol.hyper.petlives.commands.CommandPet;
 import lol.hyper.petlives.events.ChunkLoad;
 import lol.hyper.petlives.events.EntityDamage;
 import lol.hyper.petlives.events.EntityTame;
@@ -26,7 +27,6 @@ import lol.hyper.petlives.tools.PetReviver;
 import lol.hyper.petlives.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
