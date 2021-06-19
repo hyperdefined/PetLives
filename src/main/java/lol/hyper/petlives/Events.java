@@ -43,10 +43,7 @@ public class Events implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         // check only pet mobs
-        if (entity instanceof Cat
-                || entity instanceof AbstractHorse
-                || entity instanceof Parrot
-                || entity instanceof Wolf) {
+        if (entity instanceof Tameable) {
             // check to see if it's actually tamed
             if (!((Tameable) entity).isTamed()) {
                 return;
