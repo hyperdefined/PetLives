@@ -17,11 +17,16 @@
 
 package lol.hyper.petlives;
 
+import lol.hyper.petlives.events.ChunkLoad;
+import lol.hyper.petlives.events.EntityDamage;
+import lol.hyper.petlives.events.EntityTame;
+import lol.hyper.petlives.events.PlayerInteract;
 import lol.hyper.petlives.tools.PetFileHandler;
 import lol.hyper.petlives.tools.PetReviver;
 import lol.hyper.petlives.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,7 +51,10 @@ public final class PetLives extends JavaPlugin {
     public Material reviveItem;
     public FileConfiguration config;
     public PetFileHandler petFileHandler;
-    public Events events;
+    public ChunkLoad chunkLoad;
+    public EntityDamage entityDamage;
+    public EntityTame entityTame;
+    public PlayerInteract playerInteract;
     public CommandPet commandPet;
     public PetReviver petReviver;
 
@@ -54,12 +62,18 @@ public final class PetLives extends JavaPlugin {
     public void onEnable() {
         petFileHandler = new PetFileHandler(this);
         commandPet = new CommandPet(this);
-        events = new Events(this);
+        chunkLoad = new ChunkLoad(this);
+        entityDamage = new EntityDamage(this);
+        entityTame = new EntityTame(this);
+        playerInteract = new PlayerInteract(this);
         petReviver = new PetReviver(this);
         loadConfig();
 
         this.getCommand("petlives").setExecutor(commandPet);
-        Bukkit.getServer().getPluginManager().registerEvents(events, this);
+        Bukkit.getServer().getPluginManager().registerEvents(chunkLoad, this);
+        Bukkit.getServer().getPluginManager().registerEvents(entityDamage, this);
+        Bukkit.getServer().getPluginManager().registerEvents(entityTame, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerInteract, this);
 
         Metrics metrics = new Metrics(this, 11226);
 
