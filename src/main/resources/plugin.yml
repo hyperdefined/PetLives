@@ -2,6 +2,9 @@ name: PetLives
 version: ${project.version}
 main: lol.hyper.petlives.PetLives
 api-version: 1.13
+author: hyperdefined
+website: https://www.spigotmc.org/resources/petlives.91822/
+description: Give your pet lives and revive them if they die.
 commands:
   petlives:
     usage: /petlives
