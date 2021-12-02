@@ -126,7 +126,7 @@ public final class PetLives extends JavaPlugin {
     public void checkForUpdates() {
         GitHubReleaseAPI api;
         try {
-            api = new GitHubReleaseAPI("repo", "hyperdefined");
+            api = new GitHubReleaseAPI("PetLives", "hyperdefined");
         } catch (IOException e) {
             logger.warning("Unable to check updates!");
             e.printStackTrace();
