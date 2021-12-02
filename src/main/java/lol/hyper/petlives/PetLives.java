@@ -17,6 +17,8 @@
 
 package lol.hyper.petlives;
 
+import lol.hyper.githubreleaseapi.GitHubRelease;
+import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.petlives.commands.CommandPet;
 import lol.hyper.petlives.events.ChunkLoad;
 import lol.hyper.petlives.events.EntityDamage;
@@ -24,7 +26,6 @@ import lol.hyper.petlives.events.EntityTame;
 import lol.hyper.petlives.events.PlayerInteract;
 import lol.hyper.petlives.tools.PetFileHandler;
 import lol.hyper.petlives.tools.PetReviver;
-import lol.hyper.petlives.tools.UpdateChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -75,16 +76,9 @@ public final class PetLives extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(entityTame, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerInteract, this);
 
-        Metrics metrics = new Metrics(this, 11226);
+        new Metrics(this, 11226);
 
-        new UpdateChecker(this, 91822).getVersion(version -> {
-            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                logger.info("You are running the latest version.");
-            } else {
-                logger.info(
-                        "There is a new version available! Please download at https://www.spigotmc.org/resources/petlives.91822/");
-            }
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
     }
 
     public void loadConfig() {
@@ -126,6 +120,29 @@ public final class PetLives extends JavaPlugin {
             reviveItem = Material.ENCHANTED_GOLDEN_APPLE;
         } else {
             reviveItem = Material.valueOf(config.getString("items.revive-item"));
+        }
+    }
+
+    public void checkForUpdates() {
+        GitHubReleaseAPI api;
+        try {
+            api = new GitHubReleaseAPI("repo", "hyperdefined");
+        } catch (IOException e) {
+            logger.warning("Unable to check updates!");
+            e.printStackTrace();
+            return;
+        }
+        GitHubRelease current = api.getReleaseByTag(this.getDescription().getVersion());
+        GitHubRelease latest = api.getLatestVersion();
+        if (current == null) {
+            logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
+            return;
+        }
+        int buildsBehind = api.getBuildsBehind(current);
+        if (buildsBehind == 0) {
+            logger.info("You are running the latest version.");
+        } else {
+            logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
     }
 }
