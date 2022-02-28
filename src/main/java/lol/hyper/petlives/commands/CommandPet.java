@@ -48,7 +48,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,9 +102,9 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
-                JSONObject pet = (JSONObject) jsonObject.get(petUUID.toString());
-                String name = (String) pet.get("name");
-                if (name == null) {
+                JSONObject pet = jsonObject.getJSONObject(petUUID.toString());
+                String name = pet.getString("name");
+                if (name.isEmpty()) {
                     name = (String) pet.get("type");
                     name = PetNameHandler.fixName(name);
                 }
@@ -112,7 +112,7 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(ChatColor.GOLD + "-----------------" + name + "-----------------");
                 sender.sendMessage(ChatColor.GOLD + "Type: " + ChatColor.YELLOW
                         + pet.get("type").toString());
-                sender.sendMessage(ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + petUUID.toString());
+                sender.sendMessage(ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + petUUID);
                 sender.sendMessage(
                         ChatColor.GOLD + "X: " + ChatColor.YELLOW + (int) deathLocation.getX() + ChatColor.GOLD + " Y: "
                                 + ChatColor.YELLOW + (int) deathLocation.getY() + ChatColor.GOLD + " Z: "
