@@ -24,7 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -43,13 +43,16 @@ public class PetReviver {
             return;
         }
         // get some basic info for the pet
-        JSONObject deadPet = (JSONObject) jsonObject.get(pet.toString());
-        String type = (String) deadPet.get("type");
-        String name = (String) deadPet.get("name");
-        boolean isAdult = (boolean) deadPet.get("isAdult");
+        JSONObject deadPet = jsonObject.getJSONObject(pet.toString());
+        String type = deadPet.getString("type");
+        String name = deadPet.getString("name");
+        if (name.isEmpty()) {
+            name = null;
+        }
+        boolean isAdult = deadPet.getBoolean("isAdult");
         AttributeInstance attributeMovementSpeed;
         AttributeInstance attributeMaxHealth;
-        long ageFromJSON = (long) deadPet.get("age");
+        long ageFromJSON = deadPet.getLong("age");
         int age = Math.toIntExact(ageFromJSON);
 
         // we spawn the pet differently based on the type
@@ -216,7 +219,7 @@ public class PetReviver {
                                 + "Invalid pet type was saved. This is very bad. Plugin data was modified manually. Please check your console and report this issue on GitHub.");
                 petLives.logger.severe(
                         "Unable to respawn pet because the type is invalid. Please report this issue on GitHub. Raw data from file: "
-                                + deadPet.toJSONString());
+                                + deadPet);
             }
         }
         if (entity != null) {

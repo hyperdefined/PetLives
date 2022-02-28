@@ -23,16 +23,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,26 +61,31 @@ public class PetFileHandler {
     }
 
     /**
-     * Read a JSON file.
-     * @param file JSON file to be read.
-     * @return JSONObject from the file.
+     * Read data from JSON file.
+     * @param file File to read data from.
+     * @return JSONObject with JSON data.
      */
     private JSONObject readFile(File file) {
         if (!file.exists()) {
             return null;
         }
-        JSONParser parser = new JSONParser();
-        Object obj = null;
+        JSONObject object = null;
         try {
-            FileReader reader = new FileReader(file);
-            obj = parser.parse(reader);
-            reader.close();
-        } catch (IOException | ParseException e) {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                line = br.readLine();
+            }
+            object = new JSONObject(sb.toString());
+            br.close();
+        } catch (Exception e) {
             petLives.logger.severe("Unable to read file " + file.getAbsolutePath());
             petLives.logger.severe("This is bad, really bad.");
             e.printStackTrace();
         }
-        return (JSONObject) obj;
+        return object;
     }
 
     /**
@@ -92,10 +93,10 @@ public class PetFileHandler {
      * @param file File to write data to.
      * @param jsonToWrite Data to write to file. This much be a JSON string.
      */
-    private void writeFile(File file, String jsonToWrite) {
+    private void writeFile(File file, JSONObject jsonToWrite) {
         try {
             FileWriter writer = new FileWriter(file);
-            writer.write(jsonToWrite);
+            writer.write(String.valueOf(jsonToWrite));
             writer.close();
         } catch (IOException e) {
             petLives.logger.severe("Unable to write file " + file.getAbsolutePath());
@@ -125,15 +126,10 @@ public class PetFileHandler {
      */
     public ArrayList<String> getDeadPetsList(UUID player) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
-        ArrayList<String> deadPets = new ArrayList<>();
         if (jsonObject == null) {
             return null;
         }
-        for (Object o : jsonObject.keySet()) {
-            String key = (String) o;
-            deadPets.add(key);
-        }
-        return deadPets;
+        return new ArrayList<>(jsonObject.keySet());
     }
 
     /**
@@ -146,7 +142,7 @@ public class PetFileHandler {
         if (petFiles != null) {
             for (File currentFile : petFiles) {
                 JSONObject currentJSON = readFile(currentFile);
-                List<String> pets = new ArrayList<String>(currentJSON.keySet());
+                List<String> pets = new ArrayList<>(currentJSON.keySet());
                 if (pets.contains(pet.toString())) {
                     return true;
                 }
@@ -168,7 +164,7 @@ public class PetFileHandler {
         }
         jsonObject.remove(pet.toString());
         jsonObject.put(pet.toString(), newLives);
-        writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
+        writeFile(getAlivePetsFile(player), jsonObject);
     }
 
     /**
@@ -182,7 +178,7 @@ public class PetFileHandler {
             return;
         }
         jsonObject.remove(pet.toString());
-        writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
+        writeFile(getAlivePetsFile(player), jsonObject);
     }
 
     /**
@@ -198,7 +194,7 @@ public class PetFileHandler {
             jsonObject = new JSONObject();
         }
         jsonObject.put(pet.toString(), 0);
-        writeFile(getAlivePetsFile(player), jsonObject.toJSONString());
+        writeFile(getAlivePetsFile(player), jsonObject);
     }
 
     /**
@@ -212,7 +208,7 @@ public class PetFileHandler {
         if (jsonObject == null) {
             return false;
         }
-        return jsonObject.containsKey(pet.toString());
+        return jsonObject.keySet().contains(pet.toString());
     }
 
     /**
@@ -222,8 +218,11 @@ public class PetFileHandler {
      */
     public void removeDeadPet(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
+        if (jsonObject == null) {
+            return;
+        }
         jsonObject.remove(pet.toString());
-        writeFile(getDeadPetsFile(player), jsonObject.toJSONString());
+        writeFile(getDeadPetsFile(player), jsonObject);
     }
 
     /**
@@ -238,7 +237,7 @@ public class PetFileHandler {
         }
         JSONObject petDetails = new JSONObject();
         if (tameable.getCustomName() == null) {
-            petDetails.put("name", null);
+            petDetails.put("name", "");
         } else {
             petDetails.put("name", tameable.getCustomName());
         }
@@ -282,7 +281,7 @@ public class PetFileHandler {
 
         petDetails.put("location", location);
         jsonObject.put(tameable.getUniqueId().toString(), petDetails);
-        writeFile(getDeadPetsFile(player), jsonObject.toJSONString());
+        writeFile(getDeadPetsFile(player), jsonObject);
     }
 
     /**
