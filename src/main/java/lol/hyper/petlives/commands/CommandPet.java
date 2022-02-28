@@ -139,7 +139,7 @@ public class CommandPet implements TabExecutor {
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
                 sender.sendMessage(ChatColor.YELLOW + "Click on a pet to see its information.");
                 for (String x : deadPets) {
-                    JSONObject pet = (JSONObject) jsonObject.get(x);
+                    JSONObject pet = jsonObject.getJSONObject(x);
                     String name = (String) pet.get("name");
                     if (name == null) {
                         name = (String) pet.get("type");

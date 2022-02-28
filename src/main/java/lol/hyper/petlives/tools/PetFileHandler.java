@@ -111,12 +111,12 @@ public class PetFileHandler {
      * @param pet Pet to get lives for.
      * @return The lives the pet has.
      */
-    public long getPetLives(UUID player, UUID pet) {
+    public int getPetLives(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
             return 0;
         }
-        return (long) jsonObject.get(pet.toString());
+        return jsonObject.getInt(pet.toString());
     }
 
     /**
@@ -157,7 +157,7 @@ public class PetFileHandler {
      * @param pet Pet to edit lives for.
      * @param newLives The new total of lives to set.
      */
-    public void updatePetLives(UUID player, UUID pet, long newLives) {
+    public void updatePetLives(UUID player, UUID pet, int newLives) {
         JSONObject jsonObject = readFile(getAlivePetsFile(player));
         if (jsonObject == null) {
             return;

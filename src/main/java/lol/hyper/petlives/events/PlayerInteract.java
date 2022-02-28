@@ -50,7 +50,7 @@ public class PlayerInteract implements Listener {
         }
         // check if the mob is owned by player
         if (petLives.petFileHandler.checkIfPlayerOwnsPet(player.getUniqueId(), entity.getUniqueId())) {
-            long currentLives = petLives.petFileHandler.getPetLives(player.getUniqueId(), entity.getUniqueId());
+            int currentLives = petLives.petFileHandler.getPetLives(player.getUniqueId(), entity.getUniqueId());
             Tameable tameable = (Tameable) entity;
             ItemStack itemHeld = player.getInventory().getItemInMainHand();
             // see if they are checking how many lives pet has left

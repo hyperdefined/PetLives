@@ -56,7 +56,7 @@ public class EntityDamage implements Listener {
             UUID owner = tameable.getOwner().getUniqueId();
             // check if the pet is going to die
             if (livingEntity.getHealth() - event.getFinalDamage() <= 0) {
-                long currentLives = petLives.petFileHandler.getPetLives(owner, petUUID);
+                int currentLives = petLives.petFileHandler.getPetLives(owner, petUUID);
                 // see if the pet has any lives left
                 if (currentLives != 0) {
                     // since the pet has a life left, cancel the damage and heal it back up
