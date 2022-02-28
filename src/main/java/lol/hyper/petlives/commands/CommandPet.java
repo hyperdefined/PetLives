@@ -220,6 +220,6 @@ public class CommandPet implements TabExecutor {
             return petLives.petFileHandler.getDeadPetsList(
                     Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }
-        return Arrays.asList("help", "check", "revive", "deadpets, uuid");
+        return Arrays.asList("help", "check", "revive", "deadpets", "uuid");
     }
 }
