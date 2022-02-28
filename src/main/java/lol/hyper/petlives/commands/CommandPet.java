@@ -66,7 +66,7 @@ public class CommandPet implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 || sender instanceof ConsoleCommandSender) {
+        if (args.length == 0) {
             sender.sendMessage(ChatColor.GREEN + "PetLives version "
                     + petLives.getDescription().getVersion() + ". Created by hyperdefined.");
             sender.sendMessage(ChatColor.GREEN + "Use /petlives help for command help.");
@@ -88,6 +88,10 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "check": {
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    return true;
+                }
                 if (args.length == 1) {
                     sender.sendMessage(ChatColor.RED
                             + "You must say which pet you want to see. See /petlives deadpets for a list.");
@@ -122,6 +126,10 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "deadpets": {
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    return true;
+                }
                 ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
                 if (deadPets == null) {
                     sender.sendMessage(ChatColor.RED + "None of your pets have died.");
@@ -151,6 +159,10 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "revive": {
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    return true;
+                }
                 if (!petLives.config.getBoolean("allow-revives")) {
                     sender.sendMessage(ChatColor.RED + "You cannot revive pets.");
                     return true;
@@ -183,6 +195,10 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "uuid": {
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    return true;
+                }
                 sender.sendMessage(ChatColor.GREEN + "Right click on the mob to see its UUID.");
                 playerisCheckingMob.add(player);
                 break;
