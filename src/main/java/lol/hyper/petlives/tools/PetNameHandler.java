@@ -34,6 +34,10 @@ public class PetNameHandler {
             name = fixName(tameable.getType().toString());
         } else {
             name = tameable.getCustomName();
+            // mcmmo work around for now
+            if (name.contains("❤")) {
+                name = fixName(tameable.getType().toString());
+            }
         }
         return name;
     }
