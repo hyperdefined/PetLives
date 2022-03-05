@@ -51,10 +51,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CommandPet implements TabExecutor {
 
@@ -222,6 +219,9 @@ public class CommandPet implements TabExecutor {
             return petLives.petFileHandler.getDeadPetsList(
                     Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }
-        return Arrays.asList("help", "check", "revive", "deadpets", "uuid");
+        if (args.length == 1) {
+            return Arrays.asList("help", "check", "revive", "deadpets", "uuid");
+        }
+        return Collections.emptyList();
     }
 }
