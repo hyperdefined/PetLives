@@ -66,15 +66,15 @@ public class PetReviver {
                 if (name != null) {
                     newHorse.setCustomName(name);
                 }
-                newHorse.setJumpStrength((Double) deadPet.get("jumpStrength"));
+                newHorse.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
-                newHorse.setStyle(Horse.Style.valueOf((String) deadPet.get("style")));
-                newHorse.setColor(Horse.Color.valueOf((String) deadPet.get("color")));
+                newHorse.setStyle(Horse.Style.valueOf(deadPet.getString("style")));
+                newHorse.setColor(Horse.Color.valueOf(deadPet.getString("color")));
 
                 attributeMovementSpeed = newHorse.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                attributeMovementSpeed.setBaseValue((Double) deadPet.get("speed"));
+                attributeMovementSpeed.setBaseValue(deadPet.getDouble("speed"));
                 attributeMaxHealth = newHorse.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                attributeMaxHealth.setBaseValue((Double) deadPet.get("maxHealth"));
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
 
                 if (isAdult) {
                     newHorse.setAdult();
@@ -89,9 +89,9 @@ public class PetReviver {
                 Wolf newWolf = (Wolf) entity;
                 newWolf.setAge(age);
                 if (name != null) {
-                    newWolf.setCustomName((String) deadPet.get("name"));
+                    newWolf.setCustomName(deadPet.getString("name"));
                 }
-                newWolf.setCollarColor(DyeColor.valueOf((String) deadPet.get("collar")));
+                newWolf.setCollarColor(DyeColor.valueOf(deadPet.getString("collar")));
                 if (isAdult) {
                     newWolf.setAdult();
                 } else {
@@ -108,12 +108,12 @@ public class PetReviver {
                 if (name != null) {
                     newDonkey.setCustomName(name);
                 }
-                newDonkey.setJumpStrength((Double) deadPet.get("jumpStrength"));
+                newDonkey.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
                 attributeMovementSpeed = newDonkey.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                attributeMovementSpeed.setBaseValue((Double) deadPet.get("speed"));
+                attributeMovementSpeed.setBaseValue(deadPet.getDouble("speed"));
                 attributeMaxHealth = newDonkey.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                attributeMaxHealth.setBaseValue((Double) deadPet.get("maxHealth"));
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
 
                 if (isAdult) {
                     newDonkey.setAdult();
@@ -131,12 +131,12 @@ public class PetReviver {
                 if (name != null) {
                     newMule.setCustomName(name);
                 }
-                newMule.setJumpStrength((Double) deadPet.get("jumpStrength"));
+                newMule.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
                 attributeMovementSpeed = newMule.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                attributeMovementSpeed.setBaseValue((Double) deadPet.get("speed"));
+                attributeMovementSpeed.setBaseValue(deadPet.getDouble("speed"));
                 attributeMaxHealth = newMule.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                attributeMaxHealth.setBaseValue((Double) deadPet.get("maxHealth"));
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
 
                 if (isAdult) {
                     newMule.setAdult();
@@ -154,14 +154,14 @@ public class PetReviver {
                 if (name != null) {
                     newLlama.setCustomName(name);
                 }
-                newLlama.setJumpStrength((Double) deadPet.get("jumpStrength"));
+                newLlama.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
-                newLlama.setColor(Llama.Color.valueOf((String) deadPet.get("color")));
+                newLlama.setColor(Llama.Color.valueOf(deadPet.getString("color")));
 
                 attributeMovementSpeed = newLlama.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                attributeMovementSpeed.setBaseValue((Double) deadPet.get("speed"));
+                attributeMovementSpeed.setBaseValue(deadPet.getDouble("speed"));
                 attributeMaxHealth = newLlama.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                attributeMaxHealth.setBaseValue((Double) deadPet.get("maxHealth"));
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
 
                 if (isAdult) {
                     newLlama.setAdult();
@@ -180,10 +180,10 @@ public class PetReviver {
                     newParrot.setCustomName(name);
                 }
 
-                newParrot.setVariant(Parrot.Variant.valueOf((String) deadPet.get("parrotType")));
+                newParrot.setVariant(Parrot.Variant.valueOf(deadPet.getString("parrotType")));
 
                 attributeMaxHealth = newParrot.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                attributeMaxHealth.setBaseValue((Double) deadPet.get("maxHealth"));
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
 
                 if (isAdult) {
                     newParrot.setAdult();
@@ -199,10 +199,10 @@ public class PetReviver {
                 Cat newCat = (Cat) entity;
                 newCat.setAge(age);
                 if (name != null) {
-                    newCat.setCustomName((String) deadPet.get("name"));
+                    newCat.setCustomName(deadPet.getString("name"));
                 }
-                newCat.setCollarColor(DyeColor.valueOf((String) deadPet.get("collar")));
-                newCat.setCatType(Cat.Type.valueOf((String) deadPet.get("catType")));
+                newCat.setCollarColor(DyeColor.valueOf(deadPet.getString("collar")));
+                newCat.setCatType(Cat.Type.valueOf(deadPet.getString("catType")));
                 if (isAdult) {
                     newCat.setAdult();
                 } else {
@@ -210,7 +210,6 @@ public class PetReviver {
                 }
 
                 newCat.setOwner(player);
-
                 break;
             }
             default: {
