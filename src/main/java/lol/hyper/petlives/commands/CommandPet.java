@@ -131,8 +131,8 @@ public class CommandPet implements TabExecutor {
                     return true;
                 }
                 ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
-                if (deadPets == null) {
-                    sender.sendMessage(ChatColor.RED + "None of your pets have died.");
+                if (deadPets == null || deadPets.size() == 0) {
+                    sender.sendMessage(ChatColor.RED + "You currently have no dead pets saved.");
                     return true;
                 }
                 sender.sendMessage(ChatColor.GOLD + "-----------------Dead Pets-----------------");
@@ -140,9 +140,9 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(ChatColor.YELLOW + "Click on a pet to see its information.");
                 for (String x : deadPets) {
                     JSONObject pet = jsonObject.getJSONObject(x);
-                    String name = (String) pet.get("name");
-                    if (name == null) {
-                        name = (String) pet.get("type");
+                    String name = pet.getString("name");
+                    if (name == null || name.isEmpty()) {
+                        name = pet.getString("type");
                         name = PetNameHandler.fixName(name);
                     }
                     TextComponent textComponent = new TextComponent(name);
@@ -150,7 +150,7 @@ public class CommandPet implements TabExecutor {
                     textComponent.setHoverEvent(new HoverEvent(
                             HoverEvent.Action.SHOW_TEXT,
                             new Text(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + name + "\n" + ChatColor.GOLD
-                                    + "Type: " + ChatColor.YELLOW + pet.get("type") + "\n" + ChatColor.GOLD
+                                    + "Type: " + ChatColor.YELLOW + pet.getString("type") + "\n" + ChatColor.GOLD
                                     + "UUID: " + ChatColor.YELLOW + x)));
                     textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x));
                     sender.spigot().sendMessage(textComponent);

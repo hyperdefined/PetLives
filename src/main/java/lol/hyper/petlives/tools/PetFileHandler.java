@@ -295,14 +295,14 @@ public class PetFileHandler {
         if (jsonObject == null) {
             return null;
         }
-        JSONObject petJSON = (JSONObject) jsonObject.get(pet.toString());
-        JSONObject locationJSON = (JSONObject) petJSON.get("location");
-        double x = (double) locationJSON.get("x");
-        double y = (double) locationJSON.get("y");
-        double z = (double) locationJSON.get("z");
-        float yaw = Float.parseFloat(locationJSON.get("yaw").toString());
-        float pitch = Float.parseFloat(locationJSON.get("pitch").toString());
-        World world = Bukkit.getWorld((String) locationJSON.get("world"));
+        JSONObject petJSON = jsonObject.getJSONObject(pet.toString());
+        JSONObject locationJSON = petJSON.getJSONObject("location");
+        double x = locationJSON.getDouble("x");
+        double y = locationJSON.getDouble("y");
+        double z = locationJSON.getDouble("z");
+        float yaw = Float.parseFloat(String.valueOf(locationJSON.getFloat("yaw")));
+        float pitch = Float.parseFloat(String.valueOf(locationJSON.getFloat("pitch")));
+        World world = Bukkit.getWorld(locationJSON.getString("world"));
         return new Location(world, x, y, z, yaw, pitch);
     }
 
