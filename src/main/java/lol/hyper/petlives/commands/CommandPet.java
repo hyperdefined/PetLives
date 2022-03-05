@@ -95,7 +95,13 @@ public class CommandPet implements TabExecutor {
                             + "You must say which pet you want to see. See /petlives deadpets for a list.");
                     return true;
                 }
-                UUID petUUID = UUID.fromString(args[1]);
+                UUID petUUID;
+                try {
+                    petUUID = UUID.fromString(args[1]);
+                } catch (IllegalArgumentException exception) {
+                    sender.sendMessage(ChatColor.RED + args[1] + " is not a valid UUID.");
+                    return true;
+                }
                 List<String> pets = new ArrayList<String>(petLives.petFileHandler
                         .getDeadPetsJSON(player.getUniqueId())
                         .keySet());
@@ -176,7 +182,13 @@ public class CommandPet implements TabExecutor {
                             + " to revive a pet.");
                     return true;
                 }
-                UUID petUUID = UUID.fromString(args[1]);
+                UUID petUUID;
+                try {
+                    petUUID = UUID.fromString(args[1]);
+                } catch (IllegalArgumentException exception) {
+                    sender.sendMessage(ChatColor.RED + args[1] + " is not a valid UUID.");
+                    return true;
+                }
                 List<String> pets = new ArrayList<String>(petLives.petFileHandler
                         .getDeadPetsJSON(player.getUniqueId())
                         .keySet());
