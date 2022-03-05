@@ -238,7 +238,15 @@ public class PetFileHandler {
         if (tameable.getCustomName() == null) {
             petDetails.put("name", "");
         } else {
-            petDetails.put("name", tameable.getCustomName());
+            String finalName;
+            // mcmmo hearts work around
+            // this will remove the custom name, but mcmmo messes it up with the hearts
+            if (tameable.getCustomName().contains("❤")) {
+                finalName = PetNameHandler.fixName(tameable.getType().toString());
+            } else {
+                finalName = tameable.getCustomName();
+            }
+            petDetails.put("name", finalName);
         }
         petDetails.put("age", tameable.getAge());
         petDetails.put("type", tameable.getType().toString());
