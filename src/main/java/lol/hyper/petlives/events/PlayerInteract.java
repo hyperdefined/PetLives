@@ -72,7 +72,8 @@ public class PlayerInteract implements Listener {
                                 + (currentLives + 1) + " lives!");
                         tameable.playEffect(EntityEffect.LOVE_HEARTS);
                         int index = player.getInventory().getHeldItemSlot();
-                        player.getInventory().setItem(index, new ItemStack(Material.AIR));
+                        itemHeld.setAmount(itemHeld.getAmount() - 1);
+                        player.getInventory().setItem(index, itemHeld);
                     }
                 }
             }

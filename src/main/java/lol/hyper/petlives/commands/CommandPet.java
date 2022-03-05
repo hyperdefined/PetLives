@@ -171,7 +171,9 @@ public class CommandPet implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + "You must say which pet you want to revive.");
                     return true;
                 }
-                if (player.getInventory().getItemInMainHand().getType() != petLives.reviveItem) {
+                int index = player.getInventory().getHeldItemSlot();
+                ItemStack heldItem = player.getInventory().getItem(index);
+                if (heldItem == null || heldItem.getType() != petLives.reviveItem) {
                     sender.sendMessage(ChatColor.RED + "You must be holding a " + petLives.reviveItem.toString()
                             + " to revive a pet.");
                     return true;
@@ -188,9 +190,8 @@ public class CommandPet implements TabExecutor {
                 player.getWorld().playEffect(player.getLocation(), Effect.MOBSPAWNER_FLAMES, 0);
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
                 petLives.petFileHandler.removeDeadPet(player.getUniqueId(), petUUID);
-                int index = player.getInventory().getHeldItemSlot();
-                player.getInventory().setItem(index, new ItemStack(Material.AIR));
-
+                heldItem.setAmount(heldItem.getAmount() - 1);
+                player.getInventory().setItem(index, heldItem);
                 player.sendMessage(ChatColor.GREEN + "Your pet is alive once again!");
                 break;
             }
