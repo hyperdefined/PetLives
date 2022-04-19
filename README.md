@@ -25,7 +25,7 @@ PetLives lets players give lives to their pets and revive them if they die. Live
 * Track which pets have died.
 
 ## Documentation
-Visit the [wiki](https://docs.hyper.lol/petlives) for help.
+Visit the [wiki](https://github.com/hyperdefined/PetLives/wiki) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/PetLives/blob/master/LICENSE).
