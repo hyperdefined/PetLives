@@ -23,7 +23,7 @@
 
     <groupId>lol.hyper</groupId>
     <artifactId>petlives</artifactId>
-    <version>1.1.4</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>PetLives</name>
