@@ -8,6 +8,3 @@ description: Give your pet lives and revive them if they die.
 commands:
   petlives:
     usage: /petlives
-libraries:
-  - org.json:json:20211205
-  - lol.hyper:github-release-api:1.0.1
