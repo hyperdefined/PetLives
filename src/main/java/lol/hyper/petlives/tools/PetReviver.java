@@ -147,6 +147,31 @@ public class PetReviver {
                 newMule.setOwner(player);
                 break;
             }
+            case "TRADER_LLAMA": {
+                entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.TRADER_LLAMA);
+                TraderLlama newLlama = (TraderLlama) entity;
+                newLlama.setAge(age);
+                if (name != null) {
+                    newLlama.setCustomName(name);
+                }
+                newLlama.setJumpStrength(deadPet.getDouble("jumpStrength"));
+
+                newLlama.setColor(Llama.Color.valueOf(deadPet.getString("color")));
+
+                attributeMovementSpeed = newLlama.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+                attributeMovementSpeed.setBaseValue(deadPet.getDouble("speed"));
+                attributeMaxHealth = newLlama.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                attributeMaxHealth.setBaseValue(deadPet.getDouble("maxHealth"));
+
+                if (isAdult) {
+                    newLlama.setAdult();
+                } else {
+                    newLlama.setBaby();
+                }
+
+                newLlama.setOwner(player);
+                break;
+            }
             case "LLAMA": {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
                 Llama newLlama = (Llama) entity;
