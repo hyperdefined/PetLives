@@ -39,13 +39,15 @@ public class ChunkLoad implements Listener {
         for (Entity e : chunk.getEntities()) {
             // only check tameable mobs
             if (e instanceof Tameable) {
-                // see if the mob is owned by a player
-                boolean isPetAlreadySaved = petLives.petFileHandler.isPetInStorage(e.getUniqueId());
-                if (!isPetAlreadySaved) {
-                    // if the mob is not owned, add it to our database
-                    Tameable tameable = (Tameable) e;
-                    if (tameable.getOwner() != null) {
-                        petLives.petFileHandler.addNewPet(tameable.getOwner().getUniqueId(), e.getUniqueId());
+                Tameable tameable = (Tameable) e;
+                if (tameable.isTamed()) {
+                    // see if the mob is owned by a player
+                    boolean isPetAlreadySaved = petLives.petFileHandler.isPetInStorage(e.getUniqueId());
+                    if (!isPetAlreadySaved) {
+                        // if the mob is not owned, add it to our database
+                        if (tameable.getOwner() != null) {
+                            petLives.petFileHandler.addNewPet(tameable.getOwner().getUniqueId(), e.getUniqueId());
+                        }
                     }
                 }
             }
