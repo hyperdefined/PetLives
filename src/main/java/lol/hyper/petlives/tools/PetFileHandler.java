@@ -95,7 +95,7 @@ public class PetFileHandler {
     private void writeFile(File file, JSONObject jsonToWrite) {
         try {
             FileWriter writer = new FileWriter(file);
-            writer.write(String.valueOf(jsonToWrite));
+            writer.write(jsonToWrite.toString(4));
             writer.close();
         } catch (IOException e) {
             petLives.logger.severe("Unable to write file " + file.getAbsolutePath());
