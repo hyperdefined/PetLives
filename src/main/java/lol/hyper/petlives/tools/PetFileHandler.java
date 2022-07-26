@@ -271,7 +271,7 @@ public class PetFileHandler {
                 if (jsonObject.isEmpty()) {
                     try {
                         Files.delete(getAlivePetsFile(owner).toPath());
-                        petLives.logger.info("Removing old pet file for " + owner);
+                        petLives.logger.info("Removing old pet file for " + entity.getUniqueId());
                     } catch (IOException e) {
                         petLives.logger.warning("Unable to delete file!");
                         e.printStackTrace();
@@ -282,7 +282,8 @@ public class PetFileHandler {
 
         // set the lives the new way
         PersistentDataContainer container = entity.getPersistentDataContainer();
-        container.set(petLives.petLivesKey, PersistentDataType.INTEGER, lives);
-        petLives.logger.info("Setting Lives: " + lives);
+        if (!container.has(petLives.petLivesKey, PersistentDataType.INTEGER)) {
+            container.set(petLives.petLivesKey, PersistentDataType.INTEGER, lives);
+        }
     }
 }
