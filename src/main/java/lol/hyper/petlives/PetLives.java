@@ -29,6 +29,7 @@ import lol.hyper.petlives.tools.PetReviver;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -52,29 +53,31 @@ public final class PetLives extends JavaPlugin {
     public Material reviveItem;
     public FileConfiguration config;
     public PetFileHandler petFileHandler;
-    public ChunkLoad chunkLoad;
     public EntityDamage entityDamage;
     public EntityTame entityTame;
     public PlayerInteract playerInteract;
     public CommandPet commandPet;
     public PetReviver petReviver;
+    public ChunkLoad chunkLoad;
+
+    public final NamespacedKey petLivesKey = new NamespacedKey(this, "lives");
 
     @Override
     public void onEnable() {
         petFileHandler = new PetFileHandler(this);
         commandPet = new CommandPet(this);
-        chunkLoad = new ChunkLoad(this);
         entityDamage = new EntityDamage(this);
         entityTame = new EntityTame(this);
         playerInteract = new PlayerInteract(this);
         petReviver = new PetReviver(this);
+        chunkLoad = new ChunkLoad(this);
         loadConfig();
 
         this.getCommand("petlives").setExecutor(commandPet);
-        Bukkit.getServer().getPluginManager().registerEvents(chunkLoad, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityDamage, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityTame, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerInteract, this);
+        Bukkit.getServer().getPluginManager().registerEvents(chunkLoad, this);
 
         new Metrics(this, 11226);
 
@@ -108,14 +111,25 @@ public final class PetLives extends JavaPlugin {
             }
         }
 
-        if (Material.matchMaterial(config.getString("items.lives-item")) == null) {
+        String livesItemConfig = config.getString("items.lives-item");
+        if (livesItemConfig == null) {
+            logger.warning("revive-item is NOT set! using default.");
+            livesItemConfig = "GOLDEN_APPLE";
+        }
+        if (Material.matchMaterial(livesItemConfig) == null) {
             logger.warning(config.getString("items.lives-item") + " is NOT a valid material! Using default.");
             livesItem = Material.GOLDEN_APPLE;
         } else {
             livesItem = Material.valueOf(config.getString("items.lives-item"));
         }
 
-        if (Material.matchMaterial(config.getString("items.revive-item")) == null) {
+
+        String reviveItemConfig = config.getString("items.revive-item");
+        if (reviveItemConfig == null) {
+            logger.warning("revive-item is NOT set! using default.");
+            reviveItemConfig = "ENCHANTED_GOLDEN_APPLE";
+        }
+        if (Material.matchMaterial(reviveItemConfig) == null) {
             logger.warning(config.getString("items.revive-item") + " is NOT a valid material! Using default.");
             reviveItem = Material.ENCHANTED_GOLDEN_APPLE;
         } else {

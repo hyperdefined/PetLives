@@ -51,12 +51,11 @@ public class EntityDamage implements Listener {
                 return;
             }
             LivingEntity livingEntity = (LivingEntity) entity;
-            UUID petUUID = entity.getUniqueId();
             Tameable tameable = (Tameable) entity;
             UUID owner = tameable.getOwner().getUniqueId();
             // check if the pet is going to die
             if (livingEntity.getHealth() - event.getFinalDamage() <= 0) {
-                int currentLives = petLives.petFileHandler.getPetLives(owner, petUUID);
+                int currentLives = petLives.petFileHandler.getLives(entity);
                 // see if the pet has any lives left
                 if (currentLives != 0) {
                     // since the pet has a life left, cancel the damage and heal it back up
@@ -65,7 +64,7 @@ public class EntityDamage implements Listener {
                     livingEntity.setHealth(livingEntity
                             .getAttribute(Attribute.GENERIC_MAX_HEALTH)
                             .getValue());
-                    petLives.petFileHandler.updatePetLives(owner, petUUID, currentLives - 1);
+                    petLives.petFileHandler.updateLives(entity, currentLives - 1);
                     livingEntity.playEffect(EntityEffect.TOTEM_RESURRECT);
                     Player player = Bukkit.getPlayer(owner);
                     if (player != null) {
@@ -74,9 +73,7 @@ public class EntityDamage implements Listener {
                     }
                 } else {
                     // pet is going to die :(
-                    // remove it from the player file and export it
-                    petLives.petFileHandler.removePet(owner, petUUID);
-                    petLives.petFileHandler.exportPet(owner, tameable);
+                    petLives.petFileHandler.exportPet(tameable);
                 }
             }
         }

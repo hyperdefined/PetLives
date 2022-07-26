@@ -49,31 +49,32 @@ public class PlayerInteract implements Listener {
             event.setCancelled(true);
         }
         // check if the mob is owned by player
-        if (petLives.petFileHandler.checkIfPlayerOwnsPet(player.getUniqueId(), entity.getUniqueId())) {
-            int currentLives = petLives.petFileHandler.getPetLives(player.getUniqueId(), entity.getUniqueId());
+        if (entity instanceof Tameable) {
             Tameable tameable = (Tameable) entity;
-            ItemStack itemHeld = player.getInventory().getItemInMainHand();
-            // see if they are checking how many lives pet has left
-            if (player.isSneaking() && itemHeld.getType() == Material.AIR) {
-                event.setCancelled(true);
-                player.sendMessage(
-                        ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " has " + currentLives + " lives!");
-            }
-            if (itemHeld.getType() != Material.AIR) {
-                if (itemHeld.getType() == petLives.livesItem) {
+            if (tameable.isTamed() && tameable.getOwner() != null) {
+                int lives = petLives.petFileHandler.getLives(entity);
+                ItemStack itemHeld = player.getInventory().getItemInMainHand();
+                // see if they are checking how many lives pet has left
+                if (player.isSneaking() && itemHeld.getType() == Material.AIR) {
                     event.setCancelled(true);
-                    if (currentLives + 1 > petLives.config.getInt("max-pet-lives")) {
-                        player.sendMessage(ChatColor.RED + "The maximum amount of lives is "
-                                + petLives.config.getInt("max-pet-lives") + ".");
-                    } else {
-                        petLives.petFileHandler.updatePetLives(
-                                player.getUniqueId(), entity.getUniqueId(), currentLives + 1);
-                        player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " now has "
-                                + (currentLives + 1) + " lives!");
-                        tameable.playEffect(EntityEffect.LOVE_HEARTS);
-                        int index = player.getInventory().getHeldItemSlot();
-                        itemHeld.setAmount(itemHeld.getAmount() - 1);
-                        player.getInventory().setItem(index, itemHeld);
+                    player.sendMessage(
+                            ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " has " + lives + " lives!");
+                }
+                if (itemHeld.getType() != Material.AIR) {
+                    if (itemHeld.getType() == petLives.livesItem) {
+                        event.setCancelled(true);
+                        if (lives + 1 > petLives.config.getInt("max-pet-lives")) {
+                            player.sendMessage(ChatColor.RED + "The maximum amount of lives is "
+                                    + petLives.config.getInt("max-pet-lives") + ".");
+                        } else {
+                            petLives.petFileHandler.updateLives(entity, lives + 1);
+                            player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " now has "
+                                    + (lives + 1) + " lives!");
+                            tameable.playEffect(EntityEffect.LOVE_HEARTS);
+                            int index = player.getInventory().getHeldItemSlot();
+                            itemHeld.setAmount(itemHeld.getAmount() - 1);
+                            player.getInventory().setItem(index, itemHeld);
+                        }
                     }
                 }
             }

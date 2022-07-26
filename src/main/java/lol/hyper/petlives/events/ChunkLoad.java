@@ -18,6 +18,7 @@
 package lol.hyper.petlives.events;
 
 import lol.hyper.petlives.PetLives;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Tameable;
@@ -36,21 +37,16 @@ public class ChunkLoad implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
-        for (Entity e : chunk.getEntities()) {
-            // only check tameable mobs
-            if (e instanceof Tameable) {
-                Tameable tameable = (Tameable) e;
-                if (tameable.isTamed()) {
-                    // see if the mob is owned by a player
-                    boolean isPetAlreadySaved = petLives.petFileHandler.isPetInStorage(e.getUniqueId());
-                    if (!isPetAlreadySaved) {
-                        // if the mob is not owned, add it to our database
-                        if (tameable.getOwner() != null) {
-                            petLives.petFileHandler.addNewPet(tameable.getOwner().getUniqueId(), e.getUniqueId());
-                        }
+        Bukkit.getScheduler().runTaskLater(petLives, () -> {
+            for (Entity entity : chunk.getEntities()) {
+                // only check tameable mobs
+                if (entity instanceof Tameable) {
+                    Tameable tameable = (Tameable) entity;
+                    if (tameable.isTamed()) {
+                        petLives.petFileHandler.addLivesTag(tameable, tameable.getOwner().getUniqueId());
                     }
                 }
             }
-        }
+        }, 20);
     }
 }

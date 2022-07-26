@@ -18,11 +18,11 @@
 package lol.hyper.petlives.events;
 
 import lol.hyper.petlives.PetLives;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
-
-import java.util.UUID;
 
 public class EntityTame implements Listener {
 
@@ -34,9 +34,9 @@ public class EntityTame implements Listener {
 
     @EventHandler
     public void onPetTame(EntityTameEvent event) {
-        // add new pet to player's file when they tame it
-        UUID owner = event.getOwner().getUniqueId();
-        UUID petUUID = event.getEntity().getUniqueId();
-        petLives.petFileHandler.addNewPet(owner, petUUID);
+        Tameable tameable = (Tameable) event.getEntity();
+        Bukkit.getScheduler().runTaskLater(petLives, () -> {
+            petLives.petFileHandler.addLivesTag(tameable, tameable.getOwner().getUniqueId());
+        }, 5);
     }
 }

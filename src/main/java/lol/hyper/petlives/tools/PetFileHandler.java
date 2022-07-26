@@ -23,12 +23,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class PetFileHandler {
@@ -40,22 +42,22 @@ public class PetFileHandler {
     }
 
     /**
-     * Get the player's alive pets file.
-     * @param player Player to get file for.
-     * @return The player's alive pet file.
-     */
-    private File getAlivePetsFile(UUID player) {
-        return Paths.get(petLives.alivePetsFolder + File.separator + player.toString() + ".json")
-                .toFile();
-    }
-
-    /**
      * Get the player's dead pets file.
      * @param player Player to get file for.
      * @return The player's dead pet file.
      */
     private File getDeadPetsFile(UUID player) {
         return Paths.get(petLives.deadPetsFolder + File.separator + player.toString() + ".json")
+                .toFile();
+    }
+
+    /**
+     * Get the player's alive pets file.
+     * @param player Player to get file for.
+     * @return The player's alive pet file.
+     */
+    private File getAlivePetsFile(UUID player) {
+        return Paths.get(petLives.alivePetsFolder + File.separator + player.toString() + ".json")
                 .toFile();
     }
 
@@ -105,20 +107,6 @@ public class PetFileHandler {
     }
 
     /**
-     * Get a player's pet's lives.
-     * @param player Pet owner.
-     * @param pet Pet to get lives for.
-     * @return The lives the pet has.
-     */
-    public int getPetLives(UUID player, UUID pet) {
-        JSONObject jsonObject = readFile(getAlivePetsFile(player));
-        if (jsonObject == null) {
-            return 0;
-        }
-        return jsonObject.getInt(pet.toString());
-    }
-
-    /**
      * Get a string list of dead pets' UUID.
      * @param player Player to get dead pets for.
      * @return The list of pets.
@@ -129,85 +117,6 @@ public class PetFileHandler {
             return null;
         }
         return new ArrayList<>(jsonObject.keySet());
-    }
-
-    /**
-     * Check if the pet is in our storage. This goes through all alive pets files.
-     * @param pet Pet to check if it's saved.
-     * @return True if it's saved, false if not.
-     */
-    public boolean isPetInStorage(UUID pet) {
-        File[] petFiles = petLives.alivePetsFolder.listFiles();
-        if (petFiles != null) {
-            for (File currentFile : petFiles) {
-                JSONObject currentJSON = readFile(currentFile);
-                List<String> pets = new ArrayList<>(currentJSON.keySet());
-                if (pets.contains(pet.toString())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Update a pet's lives with a new number.
-     * @param player Owner of the pet.
-     * @param pet Pet to edit lives for.
-     * @param newLives The new total of lives to set.
-     */
-    public void updatePetLives(UUID player, UUID pet, int newLives) {
-        JSONObject jsonObject = readFile(getAlivePetsFile(player));
-        if (jsonObject == null) {
-            return;
-        }
-        jsonObject.remove(pet.toString());
-        jsonObject.put(pet.toString(), newLives);
-        writeFile(getAlivePetsFile(player), jsonObject);
-    }
-
-    /**
-     * Remove a pet from the alive file.
-     * @param player Pet owner.
-     * @param pet The pet to remove.
-     */
-    public void removePet(UUID player, UUID pet) {
-        JSONObject jsonObject = readFile(getAlivePetsFile(player));
-        if (jsonObject == null) {
-            return;
-        }
-        jsonObject.remove(pet.toString());
-        writeFile(getAlivePetsFile(player), jsonObject);
-    }
-
-    /**
-     * Add a new pet to the player's file.
-     * @param player Pet owner.
-     * @param pet The pet to add.
-     */
-    public void addNewPet(UUID player, UUID pet) {
-        petLives.logger.info("Adding " + pet + " for owner "
-                + Bukkit.getOfflinePlayer(player).getName() + ".");
-        JSONObject jsonObject = readFile(getAlivePetsFile(player));
-        if (jsonObject == null) {
-            jsonObject = new JSONObject();
-        }
-        jsonObject.put(pet.toString(), 0);
-        writeFile(getAlivePetsFile(player), jsonObject);
-    }
-
-    /**
-     * See if a mob is owned by a player.
-     * @param player Owner to check.
-     * @param pet Mob to check.
-     * @return True if player owns it, false if not.
-     */
-    public boolean checkIfPlayerOwnsPet(UUID player, UUID pet) {
-        JSONObject jsonObject = readFile(getAlivePetsFile(player));
-        if (jsonObject == null) {
-            return false;
-        }
-        return jsonObject.keySet().contains(pet.toString());
     }
 
     /**
@@ -226,11 +135,11 @@ public class PetFileHandler {
 
     /**
      * Export a pet into the dead pets file.
-     * @param player Pet owner.
      * @param tameable Pet to export.
      */
-    public void exportPet(UUID player, Tameable tameable) {
-        JSONObject jsonObject = readFile(getDeadPetsFile(player));
+    public void exportPet(Tameable tameable) {
+        UUID owner = tameable.getOwner().getUniqueId();
+        JSONObject jsonObject = readFile(getDeadPetsFile(owner));
         if (jsonObject == null) {
             jsonObject = new JSONObject();
         }
@@ -288,7 +197,7 @@ public class PetFileHandler {
 
         petDetails.put("location", location);
         jsonObject.put(tameable.getUniqueId().toString(), petDetails);
-        writeFile(getDeadPetsFile(player), jsonObject);
+        writeFile(getDeadPetsFile(owner), jsonObject);
     }
 
     /**
@@ -315,5 +224,65 @@ public class PetFileHandler {
 
     public JSONObject getDeadPetsJSON(UUID player) {
         return readFile(getDeadPetsFile(player));
+    }
+
+    /**
+     * Get how many lives a pet has.
+     * @param entity The entity to check.
+     * @return How many lives it has.
+     */
+    public int getLives(Entity entity) {
+        PersistentDataContainer container = entity.getPersistentDataContainer();
+        Integer lives = 0;
+        if (container.has(petLives.petLivesKey, PersistentDataType.INTEGER)) {
+            lives = container.get(petLives.petLivesKey, PersistentDataType.INTEGER);
+        }
+        if (lives == null) {
+            return 0;
+        } else {
+            return lives;
+        }
+    }
+
+    /**
+     * Update a pet's lives.
+     * @param entity The entity to update.
+     */
+    public void updateLives(Entity entity, int newLives) {
+        PersistentDataContainer container = entity.getPersistentDataContainer();
+        if (container.has(petLives.petLivesKey, PersistentDataType.INTEGER)) {
+            container.set(petLives.petLivesKey, PersistentDataType.INTEGER, newLives);
+        }
+    }
+
+    /**
+     * Adds 0 lives to a pet.
+     * @param entity The entity to add the tag to.
+     */
+    public void addLivesTag(Tameable entity, UUID owner) {
+        // see if the pet has the old JSON storage first
+        JSONObject jsonObject = readFile(getAlivePetsFile(owner));
+        int lives = 0;
+
+        if (jsonObject != null) {
+            if (jsonObject.has(entity.getUniqueId().toString())) {
+                lives = jsonObject.getInt(entity.getUniqueId().toString());
+                jsonObject.remove(entity.getUniqueId().toString());
+                if (jsonObject.isEmpty()) {
+                    try {
+                        Files.delete(getAlivePetsFile(owner).toPath());
+                        petLives.logger.info("Removing old pet file for " + owner);
+                    } catch (IOException e) {
+                        petLives.logger.warning("Unable to delete file!");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // set the lives the new way
+        PersistentDataContainer container = entity.getPersistentDataContainer();
+        container.set(petLives.petLivesKey, PersistentDataType.INTEGER, lives);
+        petLives.logger.info("Setting Lives: " + lives);
     }
 }

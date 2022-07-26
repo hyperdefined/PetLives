@@ -247,7 +247,7 @@ public class PetReviver {
             }
         }
         if (entity != null) {
-            petLives.petFileHandler.addNewPet(player.getUniqueId(), entity.getUniqueId());
+            petLives.petFileHandler.addLivesTag((Tameable) entity, player.getUniqueId());
         }
     }
 }
