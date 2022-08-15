@@ -26,6 +26,8 @@ import lol.hyper.petlives.events.EntityTame;
 import lol.hyper.petlives.events.PlayerInteract;
 import lol.hyper.petlives.tools.PetFileHandler;
 import lol.hyper.petlives.tools.PetReviver;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -62,8 +64,12 @@ public final class PetLives extends JavaPlugin {
 
     public final NamespacedKey petLivesKey = new NamespacedKey(this, "lives");
 
+    public final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private BukkitAudiences adventure;
+
     @Override
     public void onEnable() {
+        this.adventure = BukkitAudiences.create(this);
         petFileHandler = new PetFileHandler(this);
         commandPet = new CommandPet(this);
         entityDamage = new EntityDamage(this);
@@ -158,5 +164,13 @@ public final class PetLives extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
+    }
+
+    public BukkitAudiences getAdventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException(
+                    "Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 }

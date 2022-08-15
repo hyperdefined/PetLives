@@ -36,12 +36,15 @@ package lol.hyper.petlives.commands;
 
 import lol.hyper.petlives.PetLives;
 import lol.hyper.petlives.tools.PetNameHandler;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.*;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -58,57 +61,53 @@ public class CommandPet implements TabExecutor {
 
     public final ArrayList<Player> playerisCheckingMob = new ArrayList<>();
     private final PetLives petLives;
+    private final BukkitAudiences audiences;
 
     public CommandPet(PetLives petLives) {
         this.petLives = petLives;
+        this.audiences = petLives.getAdventure();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GREEN + "PetLives version "
-                    + petLives.getDescription().getVersion() + ". Created by hyperdefined.");
-            sender.sendMessage(ChatColor.GREEN + "Use /petlives help for command help.");
+            audiences.sender(sender).sendMessage(Component.text("PetLives version " + petLives.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
         Player player = (Player) sender;
         switch (args[0]) {
             case "help": {
-                sender.sendMessage(ChatColor.GOLD + "-----------------PetLives-----------------");
-                sender.sendMessage(ChatColor.GOLD + "/petlives help " + ChatColor.YELLOW + "- Shows this menu.");
-                sender.sendMessage(
-                        ChatColor.GOLD + "/petlives check <pet UUID> " + ChatColor.YELLOW + "- Check on a dead pet.");
-                sender.sendMessage(ChatColor.GOLD + "/petlives deadpets " + ChatColor.YELLOW
-                        + "- Shows a list of your dead pets.");
-                sender.sendMessage(
-                        ChatColor.GOLD + "/petlives revive <pet UUID> " + ChatColor.YELLOW + "- Respawn a pet.");
-                sender.sendMessage(ChatColor.GOLD + "/petlives uuid " + ChatColor.YELLOW + "- Check on a mob's UUID.");
-                sender.sendMessage(ChatColor.GOLD + "/petlives setlives <uuid> <lives> " + ChatColor.YELLOW + "- Set a pet's lives.");
-                sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
+                audiences.sender(sender).sendMessage(Component.text("-----------------PetLives-----------------").color(NamedTextColor.GOLD));
+                audiences.sender(sender).sendMessage(Component.text("/petlives help ").color(NamedTextColor.GOLD).append(Component.text("- Shows this menu.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("/petlives check <pet UUID> ").color(NamedTextColor.GOLD).append(Component.text("- Check on a dead pet.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("/petlives deadpets ").color(NamedTextColor.GOLD).append(Component.text("- Shows a list of your dead pets.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("/petlives revive <pet UUID> ").color(NamedTextColor.GOLD).append(Component.text("- Respawn a pet.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("/petlives uuid ").color(NamedTextColor.GOLD).append(Component.text("- Check on a mob's UUID.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("/petlives setlives <uuid> <lives> ").color(NamedTextColor.GOLD).append(Component.text("- Check on a mob's UUID.").color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("--------------------------------------------").color(NamedTextColor.GOLD));
                 break;
             }
             case "check": {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 if (args.length == 1) {
-                    sender.sendMessage(ChatColor.RED
-                            + "You must say which pet you want to see. See /petlives deadpets for a list.");
+                    audiences.sender(sender).sendMessage(Component.text("You must say which pet you want to see. See /petlives deadpets for a list.").color(NamedTextColor.RED));
                     return true;
                 }
                 UUID petUUID;
                 try {
                     petUUID = UUID.fromString(args[1]);
                 } catch (IllegalArgumentException exception) {
-                    sender.sendMessage(ChatColor.RED + args[1] + " is not a valid UUID.");
+                    audiences.sender(sender).sendMessage(Component.text(args[1] + " is not a valid UUID.").color(NamedTextColor.RED));
                     return true;
                 }
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler
+                List<String> pets = new ArrayList<>(petLives.petFileHandler
                         .getDeadPetsJSON(player.getUniqueId())
                         .keySet());
                 if (!pets.contains(petUUID.toString())) {
-                    sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
+                    audiences.sender(sender).sendMessage(Component.text("That is not a valid pet!").color(NamedTextColor.RED));
                     return true;
                 }
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
@@ -119,31 +118,29 @@ public class CommandPet implements TabExecutor {
                     name = PetNameHandler.fixName(name);
                 }
                 Location deathLocation = petLives.petFileHandler.getDeathLocation(player.getUniqueId(), petUUID);
-                sender.sendMessage(ChatColor.GOLD + "-----------------" + name + "-----------------");
-                sender.sendMessage(ChatColor.GOLD + "Type: " + ChatColor.YELLOW
-                        + pet.get("type").toString());
-                sender.sendMessage(ChatColor.GOLD + "UUID: " + ChatColor.YELLOW + petUUID);
-                sender.sendMessage(
-                        ChatColor.GOLD + "X: " + ChatColor.YELLOW + (int) deathLocation.getX() + ChatColor.GOLD + " Y: "
-                                + ChatColor.YELLOW + (int) deathLocation.getY() + ChatColor.GOLD + " Z: "
-                                + ChatColor.YELLOW + (int) deathLocation.getZ() + ChatColor.GOLD + " ("
-                                + deathLocation.getWorld().getName() + ")");
-                sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
+                audiences.sender(sender).sendMessage(Component.text("-----------------" + name + "-----------------").color(NamedTextColor.GOLD));
+                audiences.sender(sender).sendMessage(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.get("type").toString()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(petUUID.toString()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("X: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getX()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Y: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getY()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Z: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getZ()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("World: ").color(NamedTextColor.GOLD).append(Component.text(deathLocation.getWorld().getName()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("--------------------------------------------").color(NamedTextColor.GOLD));
                 break;
             }
             case "deadpets": {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
                 if (deadPets == null || deadPets.size() == 0) {
-                    sender.sendMessage(ChatColor.RED + "You currently have no dead pets saved.");
+                    audiences.sender(sender).sendMessage(Component.text("You currently have no dead pets saved.").color(NamedTextColor.RED));
                     return true;
                 }
-                sender.sendMessage(ChatColor.GOLD + "-----------------Dead Pets-----------------");
+                audiences.sender(sender).sendMessage(Component.text("-----------------Dead Pets-----------------").color(NamedTextColor.GOLD));
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
-                sender.sendMessage(ChatColor.YELLOW + "Click on a pet to see its information.");
+                audiences.sender(sender).sendMessage(Component.text("Click on a pet to see its information.").color(NamedTextColor.YELLOW));
                 for (String x : deadPets) {
                     JSONObject pet = jsonObject.getJSONObject(x);
                     String name = pet.getString("name");
@@ -151,51 +148,48 @@ public class CommandPet implements TabExecutor {
                         name = pet.getString("type");
                         name = PetNameHandler.fixName(name);
                     }
-                    TextComponent textComponent = new TextComponent(name);
-                    textComponent.setColor(ChatColor.YELLOW);
-                    textComponent.setHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new Text(ChatColor.GOLD + "Name: " + ChatColor.YELLOW + name + "\n" + ChatColor.GOLD
-                                    + "Type: " + ChatColor.YELLOW + pet.getString("type") + "\n" + ChatColor.GOLD
-                                    + "UUID: " + ChatColor.YELLOW + x)));
-                    textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x));
-                    sender.spigot().sendMessage(textComponent);
+                    Component hoverText = Component.text("Name: ").color(NamedTextColor.YELLOW).append(Component.text(name + Component.newline()).color(NamedTextColor.YELLOW))
+                            .append(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.getString("type")).color(NamedTextColor.YELLOW)
+                                    .append(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(x).color(NamedTextColor.YELLOW)))));
+                    ClickEvent click = ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x);
+                    Component component = Component.text(name).color(NamedTextColor.YELLOW).hoverEvent(HoverEvent.showText(hoverText)).clickEvent(click);
+                    audiences.sender(sender).sendMessage(component);
                 }
-                sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
+                audiences.sender(sender).sendMessage(Component.text("--------------------------------------------").color(NamedTextColor.GOLD));
                 break;
             }
             case "revive": {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
                 if (!petLives.config.getBoolean("allow-revives")) {
-                    sender.sendMessage(ChatColor.RED + "You cannot revive pets.");
+                    audiences.sender(sender).sendMessage(Component.text("You cannot revive pets.").color(NamedTextColor.RED));
                     return true;
                 }
                 if (args.length == 1) {
-                    sender.sendMessage(ChatColor.RED + "You must say which pet you want to revive.");
+                    audiences.sender(sender).sendMessage(Component.text("You must say which pet you want to revive.").color(NamedTextColor.RED));
                     return true;
                 }
                 int index = player.getInventory().getHeldItemSlot();
                 ItemStack heldItem = player.getInventory().getItem(index);
                 if (heldItem == null || heldItem.getType() != petLives.reviveItem) {
-                    sender.sendMessage(ChatColor.RED + "You must be holding a " + petLives.reviveItem.toString()
-                            + " to revive a pet.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be holding a " + petLives.reviveItem.toString()
+                            + " to revive a pet.").color(NamedTextColor.RED));
                     return true;
                 }
                 UUID petUUID;
                 try {
                     petUUID = UUID.fromString(args[1]);
                 } catch (IllegalArgumentException exception) {
-                    sender.sendMessage(ChatColor.RED + args[1] + " is not a valid UUID.");
+                    audiences.sender(sender).sendMessage(Component.text(args[1] + " is not a valid UUID.").color(NamedTextColor.RED));
                     return true;
                 }
                 List<String> pets = new ArrayList<>(petLives.petFileHandler
                         .getDeadPetsJSON(player.getUniqueId())
                         .keySet());
                 if (!pets.contains(petUUID.toString())) {
-                    sender.sendMessage(ChatColor.RED + "That is not a valid pet!");
+                    audiences.sender(sender).sendMessage(Component.text("That is not a valid pet!").color(NamedTextColor.RED));
                     return true;
                 }
                 petLives.petReviver.respawnPet(player, petUUID, player.getLocation());
@@ -204,46 +198,54 @@ public class CommandPet implements TabExecutor {
                 petLives.petFileHandler.removeDeadPet(player.getUniqueId(), petUUID);
                 heldItem.setAmount(heldItem.getAmount() - 1);
                 player.getInventory().setItem(index, heldItem);
-                player.sendMessage(ChatColor.GREEN + "Your pet is alive once again!");
+                audiences.sender(sender).sendMessage(Component.text("Your pet is alive once again!").color(NamedTextColor.GREEN));
                 break;
             }
             case "uuid": {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
-                sender.sendMessage(ChatColor.GREEN + "Right click on the mob to see its UUID.");
+                audiences.sender(sender).sendMessage(Component.text("Right click on the mob to see its UUID.").color(NamedTextColor.GREEN));
                 playerisCheckingMob.add(player);
                 break;
             }
             case "setlives": {
                 if (sender instanceof ConsoleCommandSender) {
-                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
-                if (args.length == 3) {
-                    sender.sendMessage(ChatColor.RED + "Please use /petlives setlives <uuid> <lives>");
+                petLives.logger.info(Arrays.toString(args));
+                petLives.logger.info(String.valueOf(args.length));
+                if (args.length != 3) {
+                    audiences.sender(sender).sendMessage(Component.text("Please use /petlives setlives <uuid> <lives> instead.").color(NamedTextColor.RED));
                     return true;
                 }
-                UUID petUUID = UUID.fromString(args[1]);
+                UUID petUUID;
+                try {
+                    petUUID = UUID.fromString(args[1]);
+                } catch (IllegalArgumentException exception) {
+                    audiences.sender(sender).sendMessage(Component.text(args[1] + " is not a valid UUID.").color(NamedTextColor.RED));
+                    return true;
+                }
                 Entity petEntity = Bukkit.getEntity(petUUID);
                 if (petEntity == null) {
-                    sender.sendMessage(ChatColor.RED + "That entity could not be found by that UUID.");
+                    audiences.sender(sender).sendMessage(Component.text("That entity could not be found by that UUID.").color(NamedTextColor.RED));
                     return true;
                 }
                 try {
                     Integer.parseInt(args[2]);
                 } catch (NumberFormatException exception) {
-                    sender.sendMessage(ChatColor.RED + args[2] + " is not a valid number!.");
+                    audiences.sender(sender).sendMessage(Component.text(args[2] + " is not a valid number!").color(NamedTextColor.RED));
                     return true;
                 }
                 int newLives = Integer.parseInt(args[2]);
                 petLives.petFileHandler.updateLives(petEntity, newLives);
-                sender.sendMessage(ChatColor.GREEN + "This pet now has " + petLives.petFileHandler.getLives(petEntity) + " lives.");
+                audiences.sender(sender).sendMessage(Component.text("This pet now has " + petLives.petFileHandler.getLives(petEntity) + " lives.").color(NamedTextColor.GREEN));
                 break;
             }
             default: {
-                sender.sendMessage(ChatColor.RED + "Unknown option. Please see /petlives help for all valid options.");
+                audiences.sender(sender).sendMessage(Component.text("Unknown option. Please see /petlives help for all valid options.").color(NamedTextColor.RED));
             }
         }
         return true;
@@ -251,11 +253,7 @@ public class CommandPet implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        if (args[0].equalsIgnoreCase("check")) {
-            return petLives.petFileHandler.getDeadPetsList(
-                    Bukkit.getPlayerExact(sender.getName()).getUniqueId());
-        }
-        if (args[0].equalsIgnoreCase("revive")) {
+        if (args[0].equalsIgnoreCase("check") || args[0].equalsIgnoreCase("revive")) {
             return petLives.petFileHandler.getDeadPetsList(
                     Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }
