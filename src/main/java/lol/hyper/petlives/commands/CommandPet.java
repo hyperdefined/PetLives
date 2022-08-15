@@ -70,7 +70,7 @@ public class CommandPet implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 0 || sender instanceof ConsoleCommandSender) {
             audiences.sender(sender).sendMessage(Component.text("PetLives version " + petLives.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
@@ -88,10 +88,6 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "check": {
-                if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
-                    return true;
-                }
                 if (!sender.hasPermission("petlives.command.check")) {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
@@ -133,10 +129,6 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "deadpets": {
-                if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
-                    return true;
-                }
                 if (!sender.hasPermission("petlives.command.deadpets")) {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
@@ -167,10 +159,6 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "revive": {
-                if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
-                    return true;
-                }
                 if (!sender.hasPermission("petlives.command.revive")) {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
@@ -214,19 +202,11 @@ public class CommandPet implements TabExecutor {
                 break;
             }
             case "uuid": {
-                if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
-                    return true;
-                }
                 audiences.sender(sender).sendMessage(Component.text("Right click on the mob to see its UUID.").color(NamedTextColor.GREEN));
                 playerisCheckingMob.add(player);
                 break;
             }
             case "setlives": {
-                if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
-                    return true;
-                }
                 if (!sender.hasPermission("petlives.command.setlives")) {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
@@ -272,7 +252,7 @@ public class CommandPet implements TabExecutor {
                     Bukkit.getPlayerExact(sender.getName()).getUniqueId());
         }
         if (args.length == 1) {
-            return Arrays.asList("help", "check", "revive", "deadpets", "uuid");
+            return Arrays.asList("help", "check", "revive", "deadpets", "uuid", "setlives");
         }
         return Collections.emptyList();
     }
