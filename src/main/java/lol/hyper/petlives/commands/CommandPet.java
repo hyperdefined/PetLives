@@ -215,8 +215,6 @@ public class CommandPet implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
-                petLives.logger.info(Arrays.toString(args));
-                petLives.logger.info(String.valueOf(args.length));
                 if (args.length != 3) {
                     audiences.sender(sender).sendMessage(Component.text("Please use /petlives setlives <uuid> <lives> instead.").color(NamedTextColor.RED));
                     return true;

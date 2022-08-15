@@ -19,7 +19,10 @@ package lol.hyper.petlives.events;
 
 import lol.hyper.petlives.PetLives;
 import lol.hyper.petlives.tools.PetNameHandler;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -33,9 +36,11 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerInteract implements Listener {
 
     private final PetLives petLives;
+    private final BukkitAudiences audiences;
 
     public PlayerInteract(PetLives petLives) {
         this.petLives = petLives;
+        this.audiences = petLives.getAdventure();
     }
 
     @EventHandler
@@ -45,7 +50,9 @@ public class PlayerInteract implements Listener {
         // check if player is checking the uuid from command
         if (petLives.commandPet.playerisCheckingMob.contains(player)) {
             petLives.commandPet.playerisCheckingMob.remove(player);
-            player.sendMessage(ChatColor.GREEN + "UUID of this mob is: " + entity.getUniqueId() + ".");
+            ClickEvent copyUUID = ClickEvent.copyToClipboard(entity.getUniqueId().toString());
+            Component component = Component.text("UUID of this mob is: " + entity.getUniqueId() + ". Click to copy.").color(NamedTextColor.GREEN).clickEvent(copyUUID);
+            audiences.sender(player).sendMessage(component);
             event.setCancelled(true);
         }
         // check if the mob is owned by player
@@ -57,19 +64,18 @@ public class PlayerInteract implements Listener {
                 // see if they are checking how many lives pet has left
                 if (player.isSneaking() && itemHeld.getType() == Material.AIR) {
                     event.setCancelled(true);
-                    player.sendMessage(
-                            ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " has " + lives + " lives!");
+                    audiences.sender(player).sendMessage(Component.text(PetNameHandler.getPetName(tameable) + " has " + lives + " lives!").color(NamedTextColor.GREEN));
                 }
                 if (itemHeld.getType() != Material.AIR) {
                     if (itemHeld.getType() == petLives.livesItem) {
                         event.setCancelled(true);
                         if (lives + 1 > petLives.config.getInt("max-pet-lives")) {
-                            player.sendMessage(ChatColor.RED + "The maximum amount of lives is "
-                                    + petLives.config.getInt("max-pet-lives") + ".");
+                            audiences.sender(player).sendMessage(Component.text("The maximum amount of lives is "
+                                    + petLives.config.getInt("max-pet-lives") + ".").color(NamedTextColor.RED));
                         } else {
                             petLives.petFileHandler.updateLives(entity, lives + 1);
-                            player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable) + " now has "
-                                    + (lives + 1) + " lives!");
+                            audiences.sender(player).sendMessage(Component.text(PetNameHandler.getPetName(tameable) + " now has "
+                                    + (lives + 1) + " lives!").color(NamedTextColor.GREEN));
                             tameable.playEffect(EntityEffect.LOVE_HEARTS);
                             int index = player.getInventory().getHeldItemSlot();
                             itemHeld.setAmount(itemHeld.getAmount() - 1);

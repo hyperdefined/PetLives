@@ -19,8 +19,10 @@ package lol.hyper.petlives.events;
 
 import lol.hyper.petlives.PetLives;
 import lol.hyper.petlives.tools.PetNameHandler;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -36,9 +38,11 @@ import java.util.UUID;
 public class EntityDamage implements Listener {
 
     private final PetLives petLives;
+    private final BukkitAudiences audiences;
 
     public EntityDamage(PetLives petLives) {
         this.petLives = petLives;
+        this.audiences = petLives.getAdventure();
     }
 
     @EventHandler
@@ -68,8 +72,8 @@ public class EntityDamage implements Listener {
                     livingEntity.playEffect(EntityEffect.TOTEM_RESURRECT);
                     Player player = Bukkit.getPlayer(owner);
                     if (player != null) {
-                        player.sendMessage(ChatColor.GREEN + PetNameHandler.getPetName(tameable)
-                                + " has lost a life! They now have " + (currentLives - 1) + ".");
+                        audiences.sender(player).sendMessage(Component.text(PetNameHandler.getPetName(tameable)
+                                + " has lost a life! They now have " + (currentLives - 1) + ".").color(NamedTextColor.RED));
                     }
                 } else {
                     // pet is going to die :(
