@@ -64,7 +64,6 @@ public final class PetLives extends JavaPlugin {
 
     public final NamespacedKey petLivesKey = new NamespacedKey(this, "lives");
 
-    public final MiniMessage miniMessage = MiniMessage.miniMessage();
     private BukkitAudiences adventure;
 
     @Override
@@ -97,15 +96,6 @@ public final class PetLives extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("Your config file is outdated! Please regenerate the config.");
-        }
-
-        if (!alivePetsFolder.exists()) {
-            try {
-                Files.createDirectory(alivePetsFolder.toPath());
-            } catch (IOException e) {
-                logger.severe("Unable to create folder " + alivePetsFolder.getAbsolutePath());
-                e.printStackTrace();
-            }
         }
 
         if (!deadPetsFolder.exists()) {

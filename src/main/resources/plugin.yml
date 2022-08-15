@@ -8,3 +8,20 @@ description: Give your pet lives and revive them if they die.
 commands:
   petlives:
     usage: /petlives
+    permission: petlives.command
+permissions:
+  petlives.command:
+    description: Main permission node to access /petlives.
+    default: true
+  petlives.command.setlives:
+    description: Main permission node to access /petlives setlives.
+    default: op
+  petlives.command.check:
+    description: Main permission node to access /petlives check.
+    default: true
+  petlives.command.deadpets:
+    description: Main permission node to access /petlives deadpets.
+    default: true
+  petlives.command.revive:
+    description: Main permission node to access /petlives revive.
+    default: true

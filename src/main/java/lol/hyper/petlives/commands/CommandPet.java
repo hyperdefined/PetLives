@@ -92,6 +92,10 @@ public class CommandPet implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
+                if (!sender.hasPermission("petlives.command.check")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
+                    return true;
+                }
                 if (args.length == 1) {
                     audiences.sender(sender).sendMessage(Component.text("You must say which pet you want to see. See /petlives deadpets for a list.").color(NamedTextColor.RED));
                     return true;
@@ -133,6 +137,10 @@ public class CommandPet implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
                     return true;
                 }
+                if (!sender.hasPermission("petlives.command.deadpets")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
+                    return true;
+                }
                 ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
                 if (deadPets == null || deadPets.size() == 0) {
                     audiences.sender(sender).sendMessage(Component.text("You currently have no dead pets saved.").color(NamedTextColor.RED));
@@ -161,6 +169,10 @@ public class CommandPet implements TabExecutor {
             case "revive": {
                 if (sender instanceof ConsoleCommandSender) {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
+                if (!sender.hasPermission("petlives.command.revive")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
                 }
                 if (!petLives.config.getBoolean("allow-revives")) {
@@ -213,6 +225,10 @@ public class CommandPet implements TabExecutor {
             case "setlives": {
                 if (sender instanceof ConsoleCommandSender) {
                     audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
+                if (!sender.hasPermission("petlives.command.setlives")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
                 }
                 if (args.length != 3) {
