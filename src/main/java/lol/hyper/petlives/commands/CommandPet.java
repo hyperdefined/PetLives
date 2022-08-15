@@ -46,6 +46,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -82,6 +83,7 @@ public class CommandPet implements TabExecutor {
                 sender.sendMessage(
                         ChatColor.GOLD + "/petlives revive <pet UUID> " + ChatColor.YELLOW + "- Respawn a pet.");
                 sender.sendMessage(ChatColor.GOLD + "/petlives uuid " + ChatColor.YELLOW + "- Check on a mob's UUID.");
+                sender.sendMessage(ChatColor.GOLD + "/petlives setlives <uuid> <lives> " + ChatColor.YELLOW + "- Set a pet's lives.");
                 sender.sendMessage(ChatColor.GOLD + "--------------------------------------------");
                 break;
             }
@@ -189,7 +191,7 @@ public class CommandPet implements TabExecutor {
                     sender.sendMessage(ChatColor.RED + args[1] + " is not a valid UUID.");
                     return true;
                 }
-                List<String> pets = new ArrayList<String>(petLives.petFileHandler
+                List<String> pets = new ArrayList<>(petLives.petFileHandler
                         .getDeadPetsJSON(player.getUniqueId())
                         .keySet());
                 if (!pets.contains(petUUID.toString())) {
@@ -212,6 +214,32 @@ public class CommandPet implements TabExecutor {
                 }
                 sender.sendMessage(ChatColor.GREEN + "Right click on the mob to see its UUID.");
                 playerisCheckingMob.add(player);
+                break;
+            }
+            case "setlives": {
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(ChatColor.RED + "You must be a player for this command.");
+                    return true;
+                }
+                if (args.length == 3) {
+                    sender.sendMessage(ChatColor.RED + "Please use /petlives setlives <uuid> <lives>");
+                    return true;
+                }
+                UUID petUUID = UUID.fromString(args[1]);
+                Entity petEntity = Bukkit.getEntity(petUUID);
+                if (petEntity == null) {
+                    sender.sendMessage(ChatColor.RED + "That entity could not be found by that UUID.");
+                    return true;
+                }
+                try {
+                    Integer.parseInt(args[2]);
+                } catch (NumberFormatException exception) {
+                    sender.sendMessage(ChatColor.RED + args[2] + " is not a valid number!.");
+                    return true;
+                }
+                int newLives = Integer.parseInt(args[2]);
+                petLives.petFileHandler.updateLives(petEntity, newLives);
+                sender.sendMessage(ChatColor.GREEN + "This pet now has " + petLives.petFileHandler.getLives(petEntity) + " lives.");
                 break;
             }
             default: {
