@@ -148,7 +148,7 @@ public class CommandPet implements TabExecutor {
                         name = pet.getString("type");
                         name = PetNameHandler.fixName(name);
                     }
-                    Component hoverText = Component.text("Name: ").color(NamedTextColor.YELLOW).append(Component.text(name).color(NamedTextColor.YELLOW)).append(Component.newline())
+                    Component hoverText = Component.text("Name: ").color(NamedTextColor.GOLD).append(Component.text(name).color(NamedTextColor.YELLOW)).append(Component.newline())
                             .append(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.getString("type")).color(NamedTextColor.YELLOW).append(Component.newline())
                                     .append(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(x).color(NamedTextColor.YELLOW)))));
                     ClickEvent click = ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x);
