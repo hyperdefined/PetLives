@@ -120,6 +120,7 @@ public class CommandPet implements TabExecutor {
                 Location deathLocation = petLives.petFileHandler.getDeathLocation(player.getUniqueId(), petUUID);
                 audiences.sender(sender).sendMessage(Component.text("-----------------" + name + "-----------------").color(NamedTextColor.GOLD));
                 audiences.sender(sender).sendMessage(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.get("type").toString()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Name: ").color(NamedTextColor.GOLD).append(Component.text(name).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(petUUID.toString()).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("X: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getX()).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("Y: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getY()).color(NamedTextColor.YELLOW)));
