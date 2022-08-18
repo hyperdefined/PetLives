@@ -35,8 +35,6 @@ public class EntityTame implements Listener {
     @EventHandler
     public void onPetTame(EntityTameEvent event) {
         Tameable tameable = (Tameable) event.getEntity();
-        Bukkit.getScheduler().runTaskLater(petLives, () -> {
-            petLives.petFileHandler.addLivesTag(tameable, tameable.getOwner().getUniqueId());
-        }, 5);
+        Bukkit.getScheduler().runTaskLater(petLives, () -> petLives.petFileHandler.addLivesTag(tameable, tameable.getOwner().getUniqueId()), 5);
     }
 }
