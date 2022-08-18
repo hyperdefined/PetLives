@@ -70,10 +70,16 @@ public class CommandPet implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!sender.hasPermission("petlives.command")) {
+            audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
+            return true;
+        }
+
         if (args.length == 0 || sender instanceof ConsoleCommandSender) {
             audiences.sender(sender).sendMessage(Component.text("PetLives version " + petLives.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
+
         Player player = (Player) sender;
         switch (args[0]) {
             case "help": {
