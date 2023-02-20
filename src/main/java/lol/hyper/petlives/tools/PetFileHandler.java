@@ -31,6 +31,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class PetFileHandler {
@@ -111,10 +113,10 @@ public class PetFileHandler {
      * @param player Player to get dead pets for.
      * @return The list of pets.
      */
-    public ArrayList<String> getDeadPetsList(UUID player) {
+    public List<String> getDeadPetsList(UUID player) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         if (jsonObject == null) {
-            return null;
+            return Collections.emptyList();
         }
         return new ArrayList<>(jsonObject.keySet());
     }

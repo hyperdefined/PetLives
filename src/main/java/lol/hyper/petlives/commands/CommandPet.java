@@ -140,8 +140,8 @@ public class CommandPet implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission to use this!").color(NamedTextColor.RED));
                     return true;
                 }
-                ArrayList<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
-                if (deadPets == null || deadPets.size() == 0) {
+                List<String> deadPets = petLives.petFileHandler.getDeadPetsList(player.getUniqueId());
+                if (deadPets.isEmpty()) {
                     audiences.sender(sender).sendMessage(Component.text("You currently have no dead pets saved.").color(NamedTextColor.RED));
                     return true;
                 }
