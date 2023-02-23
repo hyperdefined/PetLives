@@ -25,6 +25,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -68,11 +69,11 @@ public class PetFileHandler {
      * @param file File to read data from.
      * @return JSONObject with JSON data.
      */
-    private JSONObject readFile(File file) {
+    private @Nullable JSONObject readFile(File file) {
         if (!file.exists()) {
             return null;
         }
-        JSONObject object = null;
+        JSONObject object;
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             StringBuilder sb = new StringBuilder();
@@ -87,6 +88,7 @@ public class PetFileHandler {
             petLives.logger.severe("Unable to read file " + file.getAbsolutePath());
             petLives.logger.severe("This is bad, really bad.");
             e.printStackTrace();
+            return null;
         }
         return object;
     }
@@ -208,7 +210,7 @@ public class PetFileHandler {
      * @param pet Pet to get location.
      * @return Location of death.
      */
-    public Location getDeathLocation(UUID player, UUID pet) {
+    public @Nullable Location getDeathLocation(UUID player, UUID pet) {
         JSONObject jsonObject = readFile(getDeadPetsFile(player));
         if (jsonObject == null) {
             return null;
