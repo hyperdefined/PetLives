@@ -123,15 +123,22 @@ public class CommandPet implements TabExecutor {
                     name = (String) pet.get("type");
                     name = PetNameHandler.fixName(name);
                 }
+
                 Location deathLocation = petLives.petFileHandler.getDeathLocation(player.getUniqueId(), petUUID);
+                String petType = pet.getString("type");
+                int deathX = (int) deathLocation.getX();
+                int deathY = (int) deathLocation.getY();
+                int deathZ = (int) deathLocation.getZ();
+                String deathWorld = deathLocation.getWorld().getName();
+
                 audiences.sender(sender).sendMessage(Component.text("-----------------" + name + "-----------------").color(NamedTextColor.GOLD));
-                audiences.sender(sender).sendMessage(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.get("type").toString()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(petType).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("Name: ").color(NamedTextColor.GOLD).append(Component.text(name).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(petUUID.toString()).color(NamedTextColor.YELLOW)));
-                audiences.sender(sender).sendMessage(Component.text("X: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getX()).color(NamedTextColor.YELLOW)));
-                audiences.sender(sender).sendMessage(Component.text("Y: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getY()).color(NamedTextColor.YELLOW)));
-                audiences.sender(sender).sendMessage(Component.text("Z: ").color(NamedTextColor.GOLD).append(Component.text((int) deathLocation.getZ()).color(NamedTextColor.YELLOW)));
-                audiences.sender(sender).sendMessage(Component.text("World: ").color(NamedTextColor.GOLD).append(Component.text(deathLocation.getWorld().getName()).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("X: ").color(NamedTextColor.GOLD).append(Component.text(deathX).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Y: ").color(NamedTextColor.GOLD).append(Component.text(deathY).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("Z: ").color(NamedTextColor.GOLD).append(Component.text(deathZ).color(NamedTextColor.YELLOW)));
+                audiences.sender(sender).sendMessage(Component.text("World: ").color(NamedTextColor.GOLD).append(Component.text(deathWorld).color(NamedTextColor.YELLOW)));
                 audiences.sender(sender).sendMessage(Component.text("--------------------------------------------").color(NamedTextColor.GOLD));
                 break;
             }
@@ -148,17 +155,18 @@ public class CommandPet implements TabExecutor {
                 audiences.sender(sender).sendMessage(Component.text("-----------------Dead Pets-----------------").color(NamedTextColor.GOLD));
                 JSONObject jsonObject = petLives.petFileHandler.getDeadPetsJSON(player.getUniqueId());
                 audiences.sender(sender).sendMessage(Component.text("Click on a pet to see its information.").color(NamedTextColor.YELLOW));
-                for (String x : deadPets) {
-                    JSONObject pet = jsonObject.getJSONObject(x);
+                for (String petUUID : deadPets) {
+                    JSONObject pet = jsonObject.getJSONObject(petUUID);
                     String name = pet.getString("name");
                     if (name == null || name.isEmpty()) {
                         name = pet.getString("type");
                         name = PetNameHandler.fixName(name);
                     }
+                    String petType = pet.getString("type");
                     Component hoverText = Component.text("Name: ").color(NamedTextColor.GOLD).append(Component.text(name + "\n").color(NamedTextColor.YELLOW))
-                            .append(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(pet.getString("type") + "\n").color(NamedTextColor.YELLOW)
-                                    .append(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(x).color(NamedTextColor.YELLOW)))));
-                    ClickEvent click = ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + x);
+                            .append(Component.text("Type: ").color(NamedTextColor.GOLD).append(Component.text(petType + "\n").color(NamedTextColor.YELLOW)
+                                    .append(Component.text("UUID: ").color(NamedTextColor.GOLD).append(Component.text(petUUID).color(NamedTextColor.YELLOW)))));
+                    ClickEvent click = ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/petlives check " + petUUID);
                     Component component = Component.text(name).color(NamedTextColor.YELLOW).hoverEvent(HoverEvent.showText(hoverText)).clickEvent(click);
                     audiences.sender(sender).sendMessage(component);
                 }

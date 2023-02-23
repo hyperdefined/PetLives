@@ -44,10 +44,10 @@ public class PetReviver {
         }
         // get some basic info for the pet
         JSONObject deadPet = jsonObject.getJSONObject(pet.toString());
-        String type = deadPet.getString("type");
-        String name = deadPet.getString("name");
-        if (name.isEmpty()) {
-            name = null;
+        String petType = deadPet.getString("type");
+        String petName = deadPet.getString("name");
+        if (petName.isEmpty()) {
+            petName = null;
         }
         boolean isAdult = deadPet.getBoolean("isAdult");
         AttributeInstance attributeMovementSpeed;
@@ -58,13 +58,13 @@ public class PetReviver {
         // we spawn the pet differently based on the type
         // each mob has it's own custom thing we need to save
         Entity entity = null;
-        switch (type) {
+        switch (petType) {
             case "HORSE":
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.HORSE);
                 Horse newHorse = (Horse) entity;
                 newHorse.setAge(age);
-                if (name != null) {
-                    newHorse.setCustomName(name);
+                if (petName != null) {
+                    newHorse.setCustomName(petName);
                 }
                 newHorse.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
@@ -88,7 +88,7 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.WOLF);
                 Wolf newWolf = (Wolf) entity;
                 newWolf.setAge(age);
-                if (name != null) {
+                if (petName != null) {
                     newWolf.setCustomName(deadPet.getString("name"));
                 }
                 newWolf.setCollarColor(DyeColor.valueOf(deadPet.getString("collar")));
@@ -105,8 +105,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.DONKEY);
                 Donkey newDonkey = (Donkey) entity;
                 newDonkey.setAge(age);
-                if (name != null) {
-                    newDonkey.setCustomName(name);
+                if (petName != null) {
+                    newDonkey.setCustomName(petName);
                 }
                 newDonkey.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
@@ -128,8 +128,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.MULE);
                 Mule newMule = (Mule) entity;
                 newMule.setAge(age);
-                if (name != null) {
-                    newMule.setCustomName(name);
+                if (petName != null) {
+                    newMule.setCustomName(petName);
                 }
                 newMule.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
@@ -151,8 +151,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.TRADER_LLAMA);
                 TraderLlama newLlama = (TraderLlama) entity;
                 newLlama.setAge(age);
-                if (name != null) {
-                    newLlama.setCustomName(name);
+                if (petName != null) {
+                    newLlama.setCustomName(petName);
                 }
                 newLlama.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
@@ -176,8 +176,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.LLAMA);
                 Llama newLlama = (Llama) entity;
                 newLlama.setAge(age);
-                if (name != null) {
-                    newLlama.setCustomName(name);
+                if (petName != null) {
+                    newLlama.setCustomName(petName);
                 }
                 newLlama.setJumpStrength(deadPet.getDouble("jumpStrength"));
 
@@ -201,8 +201,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.PARROT);
                 Parrot newParrot = (Parrot) entity;
                 newParrot.setAge(age);
-                if (name != null) {
-                    newParrot.setCustomName(name);
+                if (petName != null) {
+                    newParrot.setCustomName(petName);
                 }
 
                 newParrot.setVariant(Parrot.Variant.valueOf(deadPet.getString("parrotType")));
@@ -223,8 +223,8 @@ public class PetReviver {
                 entity = locationToSpawn.getWorld().spawnEntity(locationToSpawn, EntityType.CAT);
                 Cat newCat = (Cat) entity;
                 newCat.setAge(age);
-                if (name != null) {
-                    newCat.setCustomName(deadPet.getString("name"));
+                if (petName != null) {
+                    newCat.setCustomName(petName);
                 }
                 newCat.setCollarColor(DyeColor.valueOf(deadPet.getString("collar")));
                 newCat.setCatType(Cat.Type.valueOf(deadPet.getString("catType")));
