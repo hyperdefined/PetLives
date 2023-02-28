@@ -226,7 +226,7 @@ public class PetFileHandler {
         return new Location(world, x, y, z, yaw, pitch);
     }
 
-    public JSONObject getDeadPetsJSON(UUID player) {
+    public @Nullable JSONObject getDeadPetsJSON(UUID player) {
         return readFile(getDeadPetsFile(player));
     }
 
